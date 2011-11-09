@@ -1,9 +1,11 @@
 package org.incava.pmdx;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import net.sourceforge.pmd.ast.JavaParserConstants;
 import net.sourceforge.pmd.ast.SimpleNode;
 import net.sourceforge.pmd.ast.Token;
+import static org.incava.ijdk.util.IUtil.*;
 
 
 /**
@@ -87,28 +89,27 @@ public class SimpleNodeUtil {
     }
 
     public static SimpleNode findChild(SimpleNode parent, Class childType, int index) {
-        if (parent != null) {
-            int nChildren = parent.jjtGetNumChildren();
-            if (index >= 0 && index < nChildren) {
-                int nFound = 0;
-                for (int i = 0; i < nChildren; ++i) {
-                    SimpleNode child = (SimpleNode)parent.jjtGetChild(i);
-                    // tr.Ace.log("considering " + child.getClass() + " as match against " + childType);
-                    if (childType == null || child.getClass().equals(childType)) {
-                        if (nFound == index) {
-                            // tr.Ace.log("got match");
-                            return child;
-                        }
-                        else {
-                            ++nFound;
-                        }
+        if (isNull(parent)) {
+            return null;
+        }
+
+        int nChildren = parent.jjtGetNumChildren();
+        if (index >= 0 && index < nChildren) {
+            int nFound = 0;
+            for (int i = 0; i < nChildren; ++i) {
+                SimpleNode child = (SimpleNode)parent.jjtGetChild(i);
+                if (childType == null || child.getClass().equals(childType)) {
+                    if (nFound == index) {
+                        return child;
+                    }
+                    else {
+                        ++nFound;
                     }
                 }
             }
-            else {
-                tr.Ace.stack("WARNING: index " + index + " out of bounds (" + 0 + ", " + nChildren + ")");
-            }
-            // tr.Ace.log("no match for " + childType);
+        }
+        else {
+            tr.Ace.stack("WARNING: index " + index + " out of bounds (" + 0 + ", " + nChildren + ")");
         }
         return null;
     }
@@ -198,18 +199,14 @@ public class SimpleNodeUtil {
      * Returns the tokens for a node.
      */
     public static List<Token> getTokens(SimpleNode node) {
-        // tr.Ace.log("node: " + node);
-
         List<Token> tokens = new ArrayList<Token>();
         Token tk = new Token();
         tk.next = node.getFirstToken();
 
         if (tk != null) {
             tokens.add(tk);
-            // tr.Ace.log("node.getLastToken(): " + node.getLastToken());
             do {
                 tk = tk.next;
-                // tr.Ace.log("token: " + tk);
                 tokens.add(tk);
             } while (tk != node.getLastToken());
         }
@@ -240,20 +237,22 @@ public class SimpleNodeUtil {
      * non-tokens (i.e., before any child nodes).
      */
     public static Token getLeadingToken(SimpleNode node, int tokenType) {
-        if (node.jjtGetNumChildren() > 0) {
-            SimpleNode n = (SimpleNode)node.jjtGetChild(0);
+        if (node.jjtGetNumChildren() == 0) {
+            return null;
+        }
 
-            Token t = new Token();
-            t.next = node.getFirstToken();
+        SimpleNode n = (SimpleNode)node.jjtGetChild(0);
+
+        Token t = new Token();
+        t.next = node.getFirstToken();
             
-            while (true) {
-                t = t.next;
-                if (t == n.getFirstToken()) {
-                    break;
-                }
-                else if (t.kind == tokenType) {
-                    return t;
-                }
+        while (true) {
+            t = t.next;
+            if (t == n.getFirstToken()) {
+                break;
+            }
+            else if (t.kind == tokenType) {
+                return t;
             }
         }
 
@@ -266,20 +265,22 @@ public class SimpleNodeUtil {
     public static List<Token> getLeadingTokens(SimpleNode node) {
         List<Token> list = new ArrayList<Token>();
         
-        if (node.jjtGetNumChildren() > 0) {
-            SimpleNode n = (SimpleNode)node.jjtGetChild(0);
+        if (node.jjtGetNumChildren() == 0) {
+            return list;
+        }
 
-            Token t = new Token();
-            t.next = node.getFirstToken();
+        SimpleNode n = (SimpleNode)node.jjtGetChild(0);
+
+        Token t = new Token();
+        t.next = node.getFirstToken();
             
-            while (true) {
-                t = t.next;
-                if (t == n.getFirstToken()) {
-                    break;
-                }
-                else {
-                    list.add(t);
-                }
+        while (true) {
+            t = t.next;
+            if (t == n.getFirstToken()) {
+                break;
+            }
+            else {
+                list.add(t);
             }
         }
 
@@ -293,7 +294,6 @@ public class SimpleNodeUtil {
     public static void print(SimpleNode node, String prefix) {
         Token first = node.getFirstToken();
         Token last  = node.getLastToken();
-
         tr.Ace.log(prefix + "<" + node.toString() + ">" + getLocation(first, last));
     }
 
@@ -310,32 +310,35 @@ public class SimpleNodeUtil {
 
         List<Object> children = getChildren(node);
         for (Object obj : children) {
-            if (obj instanceof Token) {
-                Token tk = (Token)obj;
-                
-                if (showWhitespace) {
-                    Token st = tk.specialToken;
-                    if (st != null) {
-                        while (st.specialToken != null) {
-                            st = st.specialToken;
-                        }
-                        
-                        while (st != null) {
-                            String s = st.toString().replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r");
-                            tr.Ace.log(prefix + "    s[" + getLocation(st, st) + "] \"" + s + "\"");
-                            st = st.next;
-                        }
-                    }
-                }
-                
-                tr.Ace.log(prefix + "    t" + getLocation(tk, tk) + " \"" + tk + "\" (" + tk.kind + ")");
-            }
-            else {
-                SimpleNode sn = (SimpleNode)obj;
-                dump(sn, prefix + "    ", showWhitespace);
-            }
+            dumpObject(obj, prefix, showWhitespace);
         }
     }  
+
+    public static void dumpObject(Object obj, String prefix, boolean showWhitespace) {
+        if (obj instanceof Token) {
+            Token tk = (Token)obj;                
+            if (showWhitespace && tk.specialToken != null) {
+                dumpToken(tk.specialToken, prefix);
+            }                
+            tr.Ace.log(prefix + "    t" + getLocation(tk, tk) + " \"" + tk + "\" (" + tk.kind + ")");
+        }
+        else {
+            SimpleNode sn = (SimpleNode)obj;
+            dump(sn, prefix + "    ", showWhitespace);
+        }
+    }
+
+    public static void dumpToken(Token st, String prefix) {
+        while (st.specialToken != null) {
+            st = st.specialToken;
+        }
+                        
+        while (st != null) {
+            String s = st.toString().replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r");
+            tr.Ace.log(prefix + "    s[" + getLocation(st, st) + "] \"" + s + "\"");
+            st = st.next;
+        }
+    }
 
     protected static String getLocation(Token t1, Token t2) {
         return "[" + t1.beginLine + ":" + t1.beginColumn + ":" + t2.endLine + ":" + t2.endColumn + "]";
@@ -363,5 +366,4 @@ public class SimpleNodeUtil {
         // AKA "package"
         return 2;
     }
-
 }
