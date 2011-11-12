@@ -89,29 +89,32 @@ public class SimpleNodeUtil {
     }
 
     public static SimpleNode findChild(SimpleNode parent, Class childType, int index) {
-        if (isNull(parent)) {
+        if (index < 0 || isNull(parent)) {
             return null;
         }
 
         int nChildren = parent.jjtGetNumChildren();
-        if (index >= 0 && index < nChildren) {
-            int nFound = 0;
-            for (int i = 0; i < nChildren; ++i) {
-                SimpleNode child = (SimpleNode)parent.jjtGetChild(i);
-                if (childType == null || child.getClass().equals(childType)) {
-                    if (nFound == index) {
-                        return child;
-                    }
-                    else {
-                        ++nFound;
-                    }
-                }
+        if (index >= nChildren) {
+            return null;
+        }
+
+        int nFound = -1;
+        for (int idx = 0; idx < nChildren; ++idx) {
+            SimpleNode child = getChildOfType(parent, childType, idx);
+            if (isNotNull(child) && ++nFound == index) {
+                return child;
             }
         }
-        else {
-            tr.Ace.stack("WARNING: index " + index + " out of bounds (" + 0 + ", " + nChildren + ")");
-        }
         return null;
+    }
+
+    /**
+     * Returns the node if the class of the child at the given index matches the
+     * given class type. If the given one is null, the child will match.
+     */
+    private static SimpleNode getChildOfType(SimpleNode parent, Class childType, int index) {
+        SimpleNode child = (SimpleNode)parent.jjtGetChild(index);
+        return isNull(childType) || child.getClass().equals(childType) ? child : null;
     }
 
     /**

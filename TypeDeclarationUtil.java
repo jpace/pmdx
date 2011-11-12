@@ -170,10 +170,6 @@ public class TypeDeclarationUtil extends SimpleNodeUtil {
                 ASTClassOrInterfaceDeclaration bcoid = (ASTClassOrInterfaceDeclaration)b;
                 score = ClassUtil.getMatchScore(acoid, bcoid);
             }
-            else {
-                // WTF?
-                tr.Ace.stack(tr.Ace.RED, "a", a);
-            }
         }
 
         return score;
