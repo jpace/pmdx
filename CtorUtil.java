@@ -9,13 +9,11 @@ import net.sourceforge.pmd.ast.*;
  */
 public class CtorUtil extends FunctionUtil {
     public static Token getName(ASTConstructorDeclaration ctor) {
-        Token nameTk = SimpleNodeUtil.findToken(ctor, JavaParserConstants.IDENTIFIER);
-        return nameTk;
-    }
+        return SimpleNodeUtil.findToken(ctor, JavaParserConstants.IDENTIFIER);
+   }
 
     public static ASTFormalParameters getParameters(ASTConstructorDeclaration ctor) {
-        ASTFormalParameters params = (ASTFormalParameters)ctor.jjtGetChild(0);
-        return params;
+        return (ASTFormalParameters)SimpleNodeUtil.findChild(ctor, ASTFormalParameters.class);
     }
     
     public static double getMatchScore(ASTConstructorDeclaration a, ASTConstructorDeclaration b) {
@@ -28,8 +26,7 @@ public class CtorUtil extends FunctionUtil {
     public static String getFullName(ASTConstructorDeclaration ctor) {
         Token nameTk = getName(ctor);
         ASTFormalParameters params = getParameters(ctor);
-        String fullName = toFullName(nameTk, params);
-        return fullName;
+        return toFullName(nameTk, params);
     }
 
 }

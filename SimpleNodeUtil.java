@@ -297,7 +297,7 @@ public class SimpleNodeUtil {
     public static void print(SimpleNode node, String prefix) {
         Token first = node.getFirstToken();
         Token last  = node.getLastToken();
-        tr.Ace.log(prefix + "<" + node.toString() + ">" + getLocation(first, last));
+        tr.Ace.log(prefix + node.toString() + ":" + getLocation(first, last));
     }
 
     public static void dump(SimpleNode node) {
@@ -323,7 +323,7 @@ public class SimpleNodeUtil {
             if (showWhitespace && tk.specialToken != null) {
                 dumpToken(tk.specialToken, prefix);
             }                
-            tr.Ace.log(prefix + "    t" + getLocation(tk, tk) + " \"" + tk + "\" (" + tk.kind + ")");
+            tr.Ace.log(prefix + "    \"" + tk + "\" " + getLocation(tk, tk) + " (" + tk.kind + ")");
         }
         else {
             SimpleNode sn = (SimpleNode)obj;
