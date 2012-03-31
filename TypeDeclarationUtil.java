@@ -57,7 +57,7 @@ public class TypeDeclarationUtil extends SimpleNodeUtil {
      * inner class or interface.
      */
     public static SimpleNode getDeclaration(ASTClassOrInterfaceBodyDeclaration bdecl) {
-        return hasChildren(bdecl) ? findChild(bdecl, null) : null;
+        return hasChildren(bdecl) ? findChild(bdecl) : null;
     }
 
     /**

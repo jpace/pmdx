@@ -3,7 +3,6 @@ package org.incava.pmdx;
 import java.util.*;
 import net.sourceforge.pmd.ast.*;
 
-
 /**
  * Miscellaneous routines for compilation units.
  */
@@ -19,5 +18,4 @@ public class CompilationUnitUtil {
     public static ASTTypeDeclaration[] getTypeDeclarations(ASTCompilationUnit cu) {
         return (ASTTypeDeclaration[])SimpleNodeUtil.findChildren(cu, ASTTypeDeclaration.class);
     }
-
 }

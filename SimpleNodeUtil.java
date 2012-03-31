@@ -1,6 +1,7 @@
 package org.incava.pmdx;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import net.sourceforge.pmd.ast.JavaParserConstants;
 import net.sourceforge.pmd.ast.SimpleNode;
@@ -84,11 +85,15 @@ public class SimpleNodeUtil {
         return list;
     }
 
-    public static SimpleNode findChild(SimpleNode parent, Class childType) {
+    public static SimpleNode findChild(SimpleNode parent) {
+        return findChild(parent, (String)null, 0);
+    }
+
+    public static SimpleNode findChild(SimpleNode parent, String childType) {
         return findChild(parent, childType, 0);
     }
 
-    public static SimpleNode findChild(SimpleNode parent, Class childType, int index) {
+    public static SimpleNode findChild(SimpleNode parent, String childType, int index) {
         if (index < 0 || isNull(parent)) {
             return null;
         }
@@ -108,13 +113,29 @@ public class SimpleNodeUtil {
         return null;
     }
 
+    public static SimpleNode findChild(SimpleNode parent, Class childType) {
+        return findChild(parent, getClassName(childType), 0);
+    }
+
+    public static SimpleNode findChild(SimpleNode parent, Class childType, int index) {
+        return findChild(parent, getClassName(childType), index);
+    }
+
+    /**
+     * Returns the node if the class of the child at the given index matches the
+     * given class type. If the given one is null, the child will match.
+     */
+    private static SimpleNode getChildOfType(SimpleNode parent, String childType, int index) {
+        SimpleNode child = (SimpleNode)parent.jjtGetChild(index);
+        return isNull(childType) || child.getClass().getName().equals(childType) ? child : null;
+    }
+
     /**
      * Returns the node if the class of the child at the given index matches the
      * given class type. If the given one is null, the child will match.
      */
     private static SimpleNode getChildOfType(SimpleNode parent, Class childType, int index) {
-        SimpleNode child = (SimpleNode)parent.jjtGetChild(index);
-        return isNull(childType) || child.getClass().equals(childType) ? child : null;
+        return getChildOfType(parent, getClassName(childType), index);
     }
 
     /**
@@ -156,23 +177,27 @@ public class SimpleNodeUtil {
         return children;
     }
 
-    public static SimpleNode[] findChildren(SimpleNode parent, Class childType) {
-        List<SimpleNode> kids = new ArrayList<SimpleNode>();
+    public static <T> void fetchChildren(Collection<? super SimpleNode> coll, SimpleNode parent, Class<T> childType) {
         int nChildren = parent == null ? 0 : parent.jjtGetNumChildren();
         for (int i = 0; i < nChildren; ++i) {
             SimpleNode child = (SimpleNode)parent.jjtGetChild(i);
             if (childType == null || child.getClass().equals(childType)) {
-                kids.add(child);
+                coll.add(child);
             }
         }
+    }
+
+    public static <T extends SimpleNode> SimpleNode[] findChildren(SimpleNode parent, Class<T> childType) {
+        List<SimpleNode> children = new ArrayList<SimpleNode>();
+        fetchChildren(children, parent, childType);
 
         if (childType == null) {
-            return kids.toArray(new SimpleNode[kids.size()]);
+            return children.toArray(new SimpleNode[children.size()]);
         }
         else {
-            int size = kids.size();
+            int size = children.size();
             SimpleNode[] ary = (SimpleNode[])java.lang.reflect.Array.newInstance(childType, size);
-            System.arraycopy(kids.toArray(), 0, ary, 0, size);
+            System.arraycopy(children.toArray(), 0, ary, 0, size);
             return ary;
         }
     }
@@ -184,6 +209,9 @@ public class SimpleNodeUtil {
         return findChildren(parent, null);
     }
 
+    /**
+     * @todo remove -- this doesn't seem to be used.
+     */
     public static List<SimpleNode> findDescendants(SimpleNode parent, Class childType) {
         List<SimpleNode> kids = new ArrayList<SimpleNode>();
         int nChildren = parent == null ? 0 : parent.jjtGetNumChildren();
@@ -368,5 +396,9 @@ public class SimpleNodeUtil {
 
         // AKA "package"
         return 2;
+    }
+
+    private static String getClassName(Class cls) {
+        return cls == null ? null : cls.getName();
     }
 }
