@@ -177,12 +177,17 @@ public class SimpleNodeUtil {
         return children;
     }
 
-    public static <T> void fetchChildren(Collection<? super SimpleNode> coll, SimpleNode parent, Class<T> childType) {
+    public static <T extends SimpleNode> void fetchChildren(Collection<? super T> coll, SimpleNode parent, Class<T> childType) {
+        fetchChildren(coll, parent, childType == null ? null : childType.getName());
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static <T extends SimpleNode> void fetchChildren(Collection<? super T> coll, SimpleNode parent, String childType) {
         int nChildren = parent == null ? 0 : parent.jjtGetNumChildren();
         for (int i = 0; i < nChildren; ++i) {
             SimpleNode child = (SimpleNode)parent.jjtGetChild(i);
-            if (childType == null || child.getClass().equals(childType)) {
-                coll.add(child);
+            if (childType == null || child.getClass().getName().equals(childType)) {
+                coll.add((T)child);
             }
         }
     }
