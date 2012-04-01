@@ -1,10 +1,15 @@
 package org.incava.pmdx;
 
-import java.util.*;
-import net.sourceforge.pmd.ast.*;
-import org.incava.ijdk.lang.*;
-import org.incava.ijdk.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import net.sourceforge.pmd.ast.ASTFieldDeclaration;
+import net.sourceforge.pmd.ast.ASTType;
+import net.sourceforge.pmd.ast.ASTVariableDeclarator;
+import net.sourceforge.pmd.ast.ASTVariableDeclaratorId;
+import net.sourceforge.pmd.ast.Token;
+import org.incava.ijdk.lang.StringExt;
+import org.incava.ijdk.util.CollectionExt;
 
 /**
  * Miscellaneous routines for fields.
@@ -12,8 +17,7 @@ import org.incava.ijdk.util.*;
 public class FieldUtil extends SimpleNodeUtil {
     public static Token getName(ASTVariableDeclarator vd) {
         ASTVariableDeclaratorId vid = (ASTVariableDeclaratorId)findChild(vd, ASTVariableDeclaratorId.class);
-        Token nameTk = vid.getFirstToken();
-        return nameTk;
+        return vid.getFirstToken();
     }
 
     public static ASTVariableDeclarator[] getVariableDeclarators(ASTFieldDeclaration fld) {
@@ -43,10 +47,10 @@ public class FieldUtil extends SimpleNodeUtil {
     public static double getMatchScore(ASTFieldDeclaration afd, ASTFieldDeclaration bfd) {
         // a field can have more than one name.
 
-        List<String> aNames = FieldUtil.getNameList(afd);
-        List<String> bNames = FieldUtil.getNameList(bfd);
+        List<String> aNames = getNameList(afd);
+        List<String> bNames = getNameList(bfd);
 
-        Set<String> inBoth = CollectionExt.intersection(FieldUtil.getNameList(afd), FieldUtil.getNameList(bfd));
+        Set<String> inBoth = CollectionExt.intersection(getNameList(afd), getNameList(bfd));
 
         int     matched = inBoth.size();
         int     count   = Math.max(aNames.size(), bNames.size());
