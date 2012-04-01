@@ -68,6 +68,14 @@ public class TypeDeclarationUtil extends SimpleNodeUtil {
         return hasChildren(bdecl) ? findChild(bdecl, cls) : null;
     }
 
+    /**
+     * Returns the real declaration, which is a method, field, constructor, or
+     * inner class or interface.
+     */
+    public static SimpleNode getDeclaration(ASTClassOrInterfaceBodyDeclaration bdecl, String clsName) {
+        return hasChildren(bdecl) ? findChild(bdecl, clsName) : null;
+    }
+
     public static Map<Double, List<Pair<SimpleNode, SimpleNode>>> matchDeclarations(ASTClassOrInterfaceBodyDeclaration[] aDecls, 
                                                                                     ASTClassOrInterfaceBodyDeclaration[] bDecls, 
                                                                                     MethodUtil methodUtil) {

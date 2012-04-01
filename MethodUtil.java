@@ -3,13 +3,11 @@ package org.incava.pmdx;
 import java.util.*;
 import net.sourceforge.pmd.ast.*;
 
-
 /**
  * Miscellaneous routines for method declarations. The instance method contains
  * a cache for method lookup.
  */
 public class MethodUtil extends FunctionUtil {
-
     private final Map<ASTMethodDeclaration, MethodMatchCriteria> methodCriterias;
     
     public MethodUtil() {
@@ -19,7 +17,7 @@ public class MethodUtil extends FunctionUtil {
     public static ASTMethodDeclarator getDeclarator(ASTMethodDeclaration method) {
         return (ASTMethodDeclarator)SimpleNodeUtil.findChild(method, ASTMethodDeclarator.class);
     }
-
+    
     public static Token getName(ASTMethodDeclaration method) {
         ASTMethodDeclarator decl = getDeclarator(method);
         return decl.getFirstToken();
@@ -38,10 +36,17 @@ public class MethodUtil extends FunctionUtil {
     }
 
     public static double getMatchScore(ASTMethodDeclaration a, ASTMethodDeclaration b) {
-        MethodMatchCriteria aCriteria = new MethodMatchCriteria(a);
-        MethodMatchCriteria bCriteria = new MethodMatchCriteria(b);
-        
-        return aCriteria.compare(bCriteria);
+        String fromName = getName(a).image;
+        String toName = getName(b).image;
+
+        if (!fromName.equals(toName)) {
+            return 0;
+        }
+
+        ASTFormalParameters fromParams = getParameters(a);
+        ASTFormalParameters toParams = getParameters(b);
+
+        return ParameterUtil.getMatchScore(fromParams, toParams);
     }
 
     /**
@@ -63,5 +68,4 @@ public class MethodUtil extends FunctionUtil {
         }
         return crit;
     }
-
 }

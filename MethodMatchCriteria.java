@@ -4,16 +4,12 @@ import java.util.*;
 import net.sourceforge.pmd.ast.*;
 import org.incava.java.MatchCriteria;
 
-
 /**
  * A criterion (some criteria) for matching nodes.
  */
 public class MethodMatchCriteria extends MatchCriteria {
-    
     private final ASTMethodDeclaration meth;
-
     private String name = null;
-
     private ASTFormalParameters params = null;
     
     public MethodMatchCriteria(ASTMethodDeclaration m) {
@@ -62,5 +58,4 @@ public class MethodMatchCriteria extends MatchCriteria {
         }
         return params;
     }
-
 }
