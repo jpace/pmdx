@@ -1,5 +1,6 @@
 package org.incava.pmdx;
 
+import java.util.Collection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -16,12 +17,12 @@ import org.incava.ijdk.util.CollectionExt;
  */
 public class FieldUtil extends SimpleNodeUtil {
     public static Token getName(ASTVariableDeclarator vd) {
-        ASTVariableDeclaratorId vid = (ASTVariableDeclaratorId)findChild(vd, ASTVariableDeclaratorId.class);
+        ASTVariableDeclaratorId vid = (ASTVariableDeclaratorId)findChild(vd, "net.sourceforge.pmd.ast.ASTVariableDeclaratorId");
         return vid.getFirstToken();
     }
 
-    public static ASTVariableDeclarator[] getVariableDeclarators(ASTFieldDeclaration fld) {
-        return (ASTVariableDeclarator[])findChildren(fld, ASTVariableDeclarator.class);
+    public static List<ASTVariableDeclarator> getVariableDeclarators(ASTFieldDeclaration fld) {
+        return snatchChildren(fld, "net.sourceforge.pmd.ast.ASTVariableDeclarator");
     }
 
     /**
@@ -56,8 +57,8 @@ public class FieldUtil extends SimpleNodeUtil {
         int     count   = Math.max(aNames.size(), bNames.size());
         double  score   = 0.5 * matched / count;
 
-        ASTType aType   = (ASTType)findChild(afd, ASTType.class);
-        ASTType bType   = (ASTType)findChild(bfd, ASTType.class);
+        ASTType aType   = (ASTType)findChild(afd, "net.sourceforge.pmd.ast.ASTType");
+        ASTType bType   = (ASTType)findChild(bfd, "net.sourceforge.pmd.ast.ASTType");
 
         if (toString(aType).equals(toString(bType))) {
             score += 0.5;

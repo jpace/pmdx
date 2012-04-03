@@ -1,8 +1,9 @@
 package org.incava.pmdx;
 
-import java.util.*;
-import net.sourceforge.pmd.ast.*;
-
+import net.sourceforge.pmd.ast.ASTConstructorDeclaration;
+import net.sourceforge.pmd.ast.ASTFormalParameters;
+import net.sourceforge.pmd.ast.JavaParserConstants;
+import net.sourceforge.pmd.ast.Token;
 
 /**
  * Miscellaneous routines for constructors.
@@ -13,7 +14,7 @@ public class CtorUtil extends FunctionUtil {
    }
 
     public static ASTFormalParameters getParameters(ASTConstructorDeclaration ctor) {
-        return (ASTFormalParameters)SimpleNodeUtil.findChild(ctor, ASTFormalParameters.class);
+        return (ASTFormalParameters)SimpleNodeUtil.findChild(ctor, "net.sourceforge.pmd.ast.ASTFormalParameters");
     }
     
     public static double getMatchScore(ASTConstructorDeclaration a, ASTConstructorDeclaration b) {
@@ -28,5 +29,4 @@ public class CtorUtil extends FunctionUtil {
         ASTFormalParameters params = getParameters(ctor);
         return toFullName(nameTk, params);
     }
-
 }

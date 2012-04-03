@@ -1,7 +1,12 @@
 package org.incava.pmdx;
 
-import java.util.*;
-import net.sourceforge.pmd.ast.*;
+import java.util.HashMap;
+import java.util.Map;
+import net.sourceforge.pmd.ast.ASTFormalParameters;
+import net.sourceforge.pmd.ast.ASTMethodDeclaration;
+import net.sourceforge.pmd.ast.ASTMethodDeclarator;
+import net.sourceforge.pmd.ast.SimpleNode;
+import net.sourceforge.pmd.ast.Token;
 
 /**
  * Miscellaneous routines for method declarations. The instance method contains
@@ -31,8 +36,7 @@ public class MethodUtil extends FunctionUtil {
     public static String getFullName(ASTMethodDeclaration method) {
         Token nameTk = getName(method);
         ASTFormalParameters params = getParameters(method);
-        String fullName = toFullName(nameTk, params);
-        return fullName;
+        return toFullName(nameTk, params);
     }
 
     public static double getMatchScore(ASTMethodDeclaration a, ASTMethodDeclaration b) {

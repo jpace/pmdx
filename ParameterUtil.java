@@ -1,14 +1,17 @@
 package org.incava.pmdx;
 
-import java.util.*;
-import net.sourceforge.pmd.ast.*;
-
+import java.util.ArrayList;
+import java.util.List;
+import net.sourceforge.pmd.ast.ASTFormalParameter;
+import net.sourceforge.pmd.ast.ASTFormalParameters;
+import net.sourceforge.pmd.ast.ASTType;
+import net.sourceforge.pmd.ast.ASTVariableDeclaratorId;
+import net.sourceforge.pmd.ast.Token;
 
 /**
  * Miscellaneous routines for parameters.
  */
 public class ParameterUtil extends SimpleNodeUtil {
-
     public static ASTFormalParameter[] getParameters(ASTFormalParameters params) {
         return (ASTFormalParameter[])findChildren(params, ASTFormalParameter.class);
     }

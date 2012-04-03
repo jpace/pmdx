@@ -1,9 +1,8 @@
 package org.incava.pmdx;
 
-import java.io.*;
-import java.util.*;
-import net.sourceforge.pmd.ast.*;
-
+import net.sourceforge.pmd.ast.JavaParserConstants;
+import net.sourceforge.pmd.ast.SimpleNode;
+import net.sourceforge.pmd.ast.Token;
 
 /**
  * Miscellaneous routines for Items.
@@ -36,5 +35,4 @@ public class ItemUtil extends SimpleNodeUtil {
         }
         return null;
     }
-
 }

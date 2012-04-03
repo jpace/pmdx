@@ -1,16 +1,26 @@
 package org.incava.pmdx;
 
-import java.util.*;
-import net.sourceforge.pmd.ast.*;
-import org.incava.ijdk.lang.*;
-import org.incava.ijdk.util.*;
-
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import net.sourceforge.pmd.ast.ASTClassOrInterfaceBody;
+import net.sourceforge.pmd.ast.ASTClassOrInterfaceBodyDeclaration;
+import net.sourceforge.pmd.ast.ASTClassOrInterfaceDeclaration;
+import net.sourceforge.pmd.ast.ASTConstructorDeclaration;
+import net.sourceforge.pmd.ast.ASTFieldDeclaration;
+import net.sourceforge.pmd.ast.ASTMethodDeclaration;
+import net.sourceforge.pmd.ast.ASTTypeDeclaration;
+import net.sourceforge.pmd.ast.SimpleNode;
+import net.sourceforge.pmd.ast.Token;
+import org.incava.ijdk.lang.Pair;
+import org.incava.ijdk.util.ReverseComparator;
 
 /**
  * Miscellaneous routines for type declarations.
  */
 public class TypeDeclarationUtil extends SimpleNodeUtil {
-
     public static Token getName(ASTTypeDeclaration typeDecl) {
         ASTClassOrInterfaceDeclaration cidecl = (ASTClassOrInterfaceDeclaration)findChild(typeDecl, ASTClassOrInterfaceDeclaration.class);
         return cidecl == null ? null : cidecl.getFirstToken().next;
@@ -152,10 +162,10 @@ public class TypeDeclarationUtil extends SimpleNodeUtil {
 
         double score = 0.0;
         if (a == null && b == null) {
-            score = 1.0;
+            return 1.0;
         }
         else if (a == null || b == null) {
-            // not a match.
+            return 0.0;
         }
         else if (a.getClass().equals(b.getClass())) {
             if (a instanceof ASTMethodDeclaration) {

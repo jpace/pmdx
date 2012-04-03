@@ -1,18 +1,16 @@
 package org.incava.pmdx;
 
-import java.util.*;
-import net.sourceforge.pmd.ast.*;
-
+import net.sourceforge.pmd.ast.ASTFormalParameter;
+import net.sourceforge.pmd.ast.ASTType;
+import net.sourceforge.pmd.ast.ASTVariableDeclaratorId;
+import net.sourceforge.pmd.ast.Token;
 
 /**
  * Wraps an ASTFormalParameter
  */
 public class Parameter {
-
     private final ASTFormalParameter param;
-
     private final String name;
-
     private final String type;
 
     public Parameter(ASTFormalParameter param) {
@@ -67,5 +65,4 @@ public class Parameter {
     public String toString() {
         return param.toString();
     }
-
 }

@@ -8,7 +8,6 @@ import net.sourceforge.pmd.ast.SimpleNode;
 import net.sourceforge.pmd.ast.Token;
 import static org.incava.ijdk.util.IUtil.*;
 
-
 /**
  * Miscellaneous functions for SimpleNode.
  */
@@ -190,6 +189,19 @@ public class SimpleNodeUtil {
                 coll.add((T)child);
             }
         }
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static <T extends SimpleNode> List<T> snatchChildren(SimpleNode parent, String childType) {
+        List<T> list = new ArrayList<T>();
+        int nChildren = parent == null ? 0 : parent.jjtGetNumChildren();
+        for (int i = 0; i < nChildren; ++i) {
+            SimpleNode child = (SimpleNode)parent.jjtGetChild(i);
+            if (childType == null || child.getClass().getName().equals(childType)) {
+                list.add((T)child);
+            }
+        }
+        return list;
     }
 
     public static <T extends SimpleNode> SimpleNode[] findChildren(SimpleNode parent, Class<T> childType) {

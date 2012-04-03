@@ -1,9 +1,13 @@
 package org.incava.pmdx;
 
-import java.util.*;
-import net.sourceforge.pmd.ast.*;
+import java.util.Iterator;
+import java.util.List;
+import net.sourceforge.pmd.ast.ASTFormalParameters;
+import net.sourceforge.pmd.ast.ASTNameList;
+import net.sourceforge.pmd.ast.JavaParserConstants;
+import net.sourceforge.pmd.ast.SimpleNode;
+import net.sourceforge.pmd.ast.Token;
 import org.incava.ijdk.lang.StringExt;
-
 
 /**
  * Miscellaneous routines for functions (ctors and methods).
@@ -37,8 +41,7 @@ public class FunctionUtil extends SimpleNodeUtil {
         while (it.hasNext()) {
             Object obj = it.next();
             if (obj instanceof Token && ((Token)obj).kind == JavaParserConstants.THROWS && it.hasNext()) {
-                ASTNameList throwsList = (ASTNameList)it.next();
-                return throwsList;
+                return (ASTNameList)it.next();
             }
         }
         return null;
@@ -49,5 +52,4 @@ public class FunctionUtil extends SimpleNodeUtil {
         String       args  = StringExt.join(types, ", ");
         return tk.image + "(" + args + ")";
     }
-    
 }

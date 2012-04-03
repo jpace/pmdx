@@ -1,26 +1,25 @@
 package org.incava.pmdx;
 
-import java.util.*;
-import net.sourceforge.pmd.ast.*;
-
+import java.util.ArrayList;
+import java.util.List;
+import net.sourceforge.pmd.ast.ASTVariableDeclarator;
+import net.sourceforge.pmd.ast.ASTVariableDeclaratorId;
+import net.sourceforge.pmd.ast.Token;
 
 /**
  * Miscellaneous routines for variables (declarators).
  */
 public class VariableUtil extends SimpleNodeUtil {
     public static Token getName(ASTVariableDeclarator vd) {
-        ASTVariableDeclaratorId vid = (ASTVariableDeclaratorId)findChild(vd, ASTVariableDeclaratorId.class);
-        Token nameTk = vid.getFirstToken();
-        return nameTk;
+        ASTVariableDeclaratorId vid = (ASTVariableDeclaratorId)findChild(vd, "net.sourceforge.pmd.ast.ASTVariableDeclaratorId");
+        return vid.getFirstToken();
     }
 
-    public static Token[] getVariableNames(ASTVariableDeclarator[] vds) {
+    public static List<Token> getVariableNames(List<ASTVariableDeclarator> vds) {
         List<Token> names = new ArrayList<Token>();
-        for (int vi = 0; vi < vds.length; ++vi) {
-            ASTVariableDeclarator vd = vds[vi];
+        for (ASTVariableDeclarator vd : vds) {
             names.add(getName(vd));
         }
-        return names.toArray(new Token[names.size()]);
+        return names;
     }
-
 }

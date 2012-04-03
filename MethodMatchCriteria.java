@@ -1,7 +1,7 @@
 package org.incava.pmdx;
 
-import java.util.*;
-import net.sourceforge.pmd.ast.*;
+import net.sourceforge.pmd.ast.ASTFormalParameters;
+import net.sourceforge.pmd.ast.ASTMethodDeclaration;
 import org.incava.java.MatchCriteria;
 
 /**

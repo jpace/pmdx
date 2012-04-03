@@ -1,10 +1,14 @@
-
 package org.incava.pmdx;
 
-import java.io.*;
-import java.util.*;
-import net.sourceforge.pmd.ast.*;
-
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import net.sourceforge.pmd.ast.ASTCompilationUnit;
+import net.sourceforge.pmd.ast.JavaCharStream;
+import net.sourceforge.pmd.ast.JavaParser;
+import net.sourceforge.pmd.ast.ParseException;
 
 public class ASTDumper {
     public static void main(String[] args) {
@@ -87,5 +91,4 @@ public class ASTDumper {
         }
         System.out.println("        total time: " + (totalInitTime + totalParseTime + totalDumpTime) + " ms.");
     }
-
 }
