@@ -30,10 +30,9 @@ public class TypeDeclarationUtil extends SimpleNodeUtil {
         return (ASTClassOrInterfaceDeclaration)SimpleNodeUtil.findChild(typeDecl, ASTClassOrInterfaceDeclaration.class);
     }
 
-    public static ASTTypeDeclaration findTypeDeclaration(String name, ASTTypeDeclaration[] types) {
-        for (int i = 0; i < types.length; ++i) {
-            ASTTypeDeclaration type      = types[i];
-            Token              otherName = getName(type);
+    public static ASTTypeDeclaration findTypeDeclaration(String name, List<ASTTypeDeclaration> types) {
+        for (ASTTypeDeclaration type : types) {
+            Token otherName = getName(type);
 
             if ((otherName == null && name == null) ||
                 (otherName != null && otherName.image.equals(name))) {
@@ -48,7 +47,7 @@ public class TypeDeclarationUtil extends SimpleNodeUtil {
      * Returns a list of all methods, fields, constructors, and inner classes
      * and interfaces.
      */
-    public static ASTClassOrInterfaceBodyDeclaration[] getDeclarations(ASTTypeDeclaration tdecl) {
+    public static List<ASTClassOrInterfaceBodyDeclaration> getDeclarations(ASTTypeDeclaration tdecl) {
         ASTClassOrInterfaceDeclaration cidecl = (ASTClassOrInterfaceDeclaration)findChild(tdecl, ASTClassOrInterfaceDeclaration.class);
         return getDeclarations(cidecl);
     }
@@ -57,9 +56,9 @@ public class TypeDeclarationUtil extends SimpleNodeUtil {
      * Returns a list of all methods, fields, constructors, and inner classes
      * and interfaces.
      */
-    public static ASTClassOrInterfaceBodyDeclaration[] getDeclarations(ASTClassOrInterfaceDeclaration coid) {
+    public static List<ASTClassOrInterfaceBodyDeclaration> getDeclarations(ASTClassOrInterfaceDeclaration coid) {
         ASTClassOrInterfaceBody body = (ASTClassOrInterfaceBody)findChild(coid, ASTClassOrInterfaceBody.class);
-        return (ASTClassOrInterfaceBodyDeclaration[])findChildren(body, ASTClassOrInterfaceBodyDeclaration.class);
+        return snatchChildren(body, "net.sourceforge.pmd.ast.ASTClassOrInterfaceBodyDeclaration");
     }
 
     /**
@@ -86,8 +85,8 @@ public class TypeDeclarationUtil extends SimpleNodeUtil {
         return hasChildren(bdecl) ? findChild(bdecl, clsName) : null;
     }
 
-    public static Map<Double, List<Pair<SimpleNode, SimpleNode>>> matchDeclarations(ASTClassOrInterfaceBodyDeclaration[] aDecls, 
-                                                                                    ASTClassOrInterfaceBodyDeclaration[] bDecls, 
+    public static Map<Double, List<Pair<SimpleNode, SimpleNode>>> matchDeclarations(List<ASTClassOrInterfaceBodyDeclaration> aDecls, 
+                                                                                    List<ASTClassOrInterfaceBodyDeclaration> bDecls, 
                                                                                     MethodUtil methodUtil) {
         
         // keys (scores) maintained in reversed order:

@@ -12,21 +12,20 @@ import net.sourceforge.pmd.ast.Token;
  * Miscellaneous routines for parameters.
  */
 public class ParameterUtil extends SimpleNodeUtil {
-    public static ASTFormalParameter[] getParameters(ASTFormalParameters params) {
-        return (ASTFormalParameter[])findChildren(params, ASTFormalParameter.class);
+    public static List<ASTFormalParameter> getParameters(ASTFormalParameters params) {
+        return snatchChildren(params, "net.sourceforge.pmd.ast.ASTFormalParameter");
     }
 
-    public static Token[] getParameterNames(ASTFormalParameters params) {
-        ASTFormalParameter[] fps = getParameters(params);
+    public static List<Token> getParameterNames(ASTFormalParameters params) {
+        List<ASTFormalParameter> fps = getParameters(params);
         List<Token> names = new ArrayList<Token>();
         
-        for (int pi = 0; pi < fps.length; ++pi) {
-            ASTFormalParameter fp = fps[pi];
+        for (ASTFormalParameter fp : fps) {
             Token name = getParameterName(fp);
             names.add(name);
         }
 
-        return names.toArray(new Token[0]);
+        return names;
     }
 
     public static ASTFormalParameter getParameter(ASTFormalParameters params, int index) {
