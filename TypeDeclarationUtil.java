@@ -22,12 +22,12 @@ import org.incava.ijdk.util.ReverseComparator;
  */
 public class TypeDeclarationUtil extends SimpleNodeUtil {
     public static Token getName(ASTTypeDeclaration typeDecl) {
-        ASTClassOrInterfaceDeclaration cidecl = (ASTClassOrInterfaceDeclaration)findChild(typeDecl, ASTClassOrInterfaceDeclaration.class);
+        ASTClassOrInterfaceDeclaration cidecl = (ASTClassOrInterfaceDeclaration)findChild(typeDecl, "net.sourceforge.pmd.ast.ASTClassOrInterfaceDeclaration");
         return cidecl == null ? null : cidecl.getFirstToken().next;
     }
 
     public static ASTClassOrInterfaceDeclaration getType(ASTTypeDeclaration typeDecl) {
-        return (ASTClassOrInterfaceDeclaration)SimpleNodeUtil.findChild(typeDecl, ASTClassOrInterfaceDeclaration.class);
+        return (ASTClassOrInterfaceDeclaration)SimpleNodeUtil.findChild(typeDecl, "net.sourceforge.pmd.ast.ASTClassOrInterfaceDeclaration");
     }
 
     public static ASTTypeDeclaration findTypeDeclaration(String name, List<ASTTypeDeclaration> types) {
@@ -48,7 +48,7 @@ public class TypeDeclarationUtil extends SimpleNodeUtil {
      * and interfaces.
      */
     public static List<ASTClassOrInterfaceBodyDeclaration> getDeclarations(ASTTypeDeclaration tdecl) {
-        ASTClassOrInterfaceDeclaration cidecl = (ASTClassOrInterfaceDeclaration)findChild(tdecl, ASTClassOrInterfaceDeclaration.class);
+        ASTClassOrInterfaceDeclaration cidecl = (ASTClassOrInterfaceDeclaration)findChild(tdecl, "net.sourceforge.pmd.ast.ASTClassOrInterfaceDeclaration");
         return getDeclarations(cidecl);
     }
 
@@ -57,7 +57,7 @@ public class TypeDeclarationUtil extends SimpleNodeUtil {
      * and interfaces.
      */
     public static List<ASTClassOrInterfaceBodyDeclaration> getDeclarations(ASTClassOrInterfaceDeclaration coid) {
-        ASTClassOrInterfaceBody body = (ASTClassOrInterfaceBody)findChild(coid, ASTClassOrInterfaceBody.class);
+        ASTClassOrInterfaceBody body = (ASTClassOrInterfaceBody)findChild(coid, "net.sourceforge.pmd.ast.ASTClassOrInterfaceBody");
         return snatchChildren(body, "net.sourceforge.pmd.ast.ASTClassOrInterfaceBodyDeclaration");
     }
 

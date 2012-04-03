@@ -27,7 +27,7 @@ public class Parameter {
             // type is the first child, but we also have to look for the
             // variable ID including brackets, for arrays
             StringBuilder sb = new StringBuilder();
-            ASTType      type    = (ASTType)SimpleNodeUtil.findChild(param, ASTType.class);
+            ASTType      type    = (ASTType)SimpleNodeUtil.findChild(param, "net.sourceforge.pmd.ast.ASTType");
             Token        ttk     = type.getFirstToken();
         
             while (true) {

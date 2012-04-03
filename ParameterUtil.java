@@ -29,7 +29,7 @@ public class ParameterUtil extends SimpleNodeUtil {
     }
 
     public static ASTFormalParameter getParameter(ASTFormalParameters params, int index) {
-        return (ASTFormalParameter)findChild(params, ASTFormalParameter.class, index);
+        return (ASTFormalParameter)findChild(params, "net.sourceforge.pmd.ast.ASTFormalParameter", index);
     }
 
     public static Token getParameterName(ASTFormalParameters params, int index) {
@@ -83,7 +83,7 @@ public class ParameterUtil extends SimpleNodeUtil {
             // type is the first child, but we also have to look for the
             // variable ID including brackets, for arrays
             StringBuffer typeBuf = new StringBuffer();
-            ASTType      type    = (ASTType)SimpleNodeUtil.findChild(param, ASTType.class);
+            ASTType      type    = (ASTType)SimpleNodeUtil.findChild(param, "net.sourceforge.pmd.ast.ASTType");
             Token        ttk     = type.getFirstToken();
         
             while (true) {
@@ -96,7 +96,7 @@ public class ParameterUtil extends SimpleNodeUtil {
                 }
             }
             
-            ASTVariableDeclaratorId vid = (ASTVariableDeclaratorId)SimpleNodeUtil.findChild(param, ASTVariableDeclaratorId.class);
+            ASTVariableDeclaratorId vid = (ASTVariableDeclaratorId)SimpleNodeUtil.findChild(param, "net.sourceforge.pmd.ast.ASTVariableDeclaratorId");
             
             Token vtk = vid.getFirstToken();
             while (vtk != vid.getLastToken()) {
