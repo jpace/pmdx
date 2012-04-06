@@ -108,27 +108,27 @@ public class ParameterUtil extends SimpleNodeUtil {
         }
     }
 
-    public static int[] getMatch(List<Parameter> aParameters, int aIndex, List<Parameter> bParameters) {
+    public static int[] getMatch(List<Parameter> fromParameters, int fromIdx, List<Parameter> toParameters) {
         int typeMatch = -1;
         int nameMatch = -1;
         
-        Parameter ap = aParameters.get(aIndex);
+        Parameter fromParam = fromParameters.get(fromIdx);
 
-        for (int bi = 0; bi < bParameters.size(); ++bi) {
-            Parameter bp = bParameters.get(bi);
+        for (int toIdx = 0; toIdx < toParameters.size(); ++toIdx) {
+            Parameter toParam = toParameters.get(toIdx);
 
-            if (bp != null) {
-                if (ap.getType().equals(bp.getType())) {
-                    typeMatch = bi;
+            if (toParam != null) {
+                if (fromParam.getType().equals(toParam.getType())) {
+                    typeMatch = toIdx;
                 }
 
-                if (ap.getName().equals(bp.getName())) {
-                    nameMatch = bi;
+                if (fromParam.getName().equals(toParam.getName())) {
+                    nameMatch = toIdx;
                 }
 
-                if (typeMatch == bi && nameMatch == bi) {
-                    aParameters.set(aIndex, null);
-                    bParameters.set(bi,     null);
+                if (typeMatch == toIdx && nameMatch == toIdx) {
+                    fromParameters.set(fromIdx, null);
+                    toParameters.set(toIdx, null);
                     return new int[] { typeMatch, nameMatch };
                 }
             }
@@ -138,20 +138,20 @@ public class ParameterUtil extends SimpleNodeUtil {
         if (bestMatch < 0) {
             bestMatch = nameMatch;
         }
-
+        
         if (bestMatch >= 0) {
             // make sure there isn't an exact match for this somewhere else in
-            // aParameters
-            Parameter bp = bParameters.get(bestMatch);
+            // fromParameters
+            Parameter toParam = toParameters.get(bestMatch);
 
-            int aMatch = getExactMatch(aParameters, bp);
+            int fromMatch = getExactMatch(fromParameters, toParam);
 
-            if (aMatch >= 0) {
+            if (fromMatch >= 0) {
                 return new int[] { -1, -1 };
             }
             else {
-                aParameters.set(aIndex,    null);
-                bParameters.set(bestMatch, null);
+                fromParameters.set(fromIdx, null);
+                toParameters.set(bestMatch, null);
                 return new int[] { typeMatch, nameMatch };
             }
         }
