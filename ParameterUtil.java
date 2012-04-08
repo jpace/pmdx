@@ -53,18 +53,6 @@ public class ParameterUtil extends SimpleNodeUtil {
         return types;
     }
 
-    public static List<Parameter> getParameterList(ASTFormalParameters params) {
-        List<Parameter> paramList = new ArrayList<Parameter>();
-        int nParams = params.jjtGetNumChildren();
-        
-        for (int i = 0; i < nParams; ++i) {
-            ASTFormalParameter param  = getParameter(params, i);
-            paramList.add(new Parameter(param));
-        }
-
-        return paramList;
-    }
-
     public static Token getParameterName(ASTFormalParameter param) {
         return getParameterNameToken(param);
     }
@@ -112,34 +100,18 @@ public class ParameterUtil extends SimpleNodeUtil {
         }
     }
 
-    protected static void clearFromLists(List<Parameter> fromParameters, int fromIdx, List<Parameter> toParameters, int toIdx) {
+    protected static void clearFromLists(List<ASTFormalParameter> fromParameters, int fromIdx, List<ASTFormalParameter> toParameters, int toIdx) {
         fromParameters.set(fromIdx, null);
         toParameters.set(toIdx, null);
     }
 
-    protected static List<ASTFormalParameter> toFormalParamList(List<Parameter> parameters) {
-        List<ASTFormalParameter > formalParams = new ArrayList<ASTFormalParameter>();
-        for (Parameter param : parameters) {
-            formalParams.add(param == null ? null : param.getParameter());
-        }
-        return formalParams;
-    }
-
-    public static int[] getMatch(List<Parameter> fromParameters, int fromIdx, List<Parameter> toParameters) {
+    public static int[] getMatch(List<ASTFormalParameter> fromFormalParams, int fromIdx, List<ASTFormalParameter> toFormalParams) {
         int typeMatch = -1;
         int nameMatch = -1;
 
-        Parameter fromParam = fromParameters.get(fromIdx);
-
-        tr.Ace.onRed("fromParam", fromParam);
-        tr.Ace.onRed("fromParam.type", fromParam.getType());
-
-        ASTFormalParameter fp = fromParam.getParameter();
+        ASTFormalParameter fp = fromFormalParams.get(fromIdx);
         tr.Ace.onRed("fp", fp);
         tr.Ace.onRed("type(fp)", getParameterType(fp));
-
-        List<ASTFormalParameter> fromFormalParams = toFormalParamList(fromParameters);
-        List<ASTFormalParameter> toFormalParams = toFormalParamList(toParameters);
 
         for (int toIdx = 0; toIdx < toFormalParams.size(); ++toIdx) {
             ASTFormalParameter tp = toFormalParams.get(toIdx);
@@ -147,10 +119,6 @@ public class ParameterUtil extends SimpleNodeUtil {
             if (tp == null) {
                 continue;
             }
-
-            // ASTFormalParameter tp = toFormalParams.get();
-            tr.Ace.onRed("tp", tp);
-            tr.Ace.onRed("type(tp)", getParameterType(tp));
 
             if (areTypesEqual(fp, tp)) {
                 typeMatch = toIdx;
@@ -161,7 +129,7 @@ public class ParameterUtil extends SimpleNodeUtil {
             }
 
             if (typeMatch == toIdx && nameMatch == toIdx) {
-                clearFromLists(fromParameters, fromIdx, toParameters, toIdx);
+                clearFromLists(fromFormalParams, fromIdx, toFormalParams, toIdx);
                 return new int[] { typeMatch, nameMatch };
             }
         }
@@ -177,16 +145,15 @@ public class ParameterUtil extends SimpleNodeUtil {
 
         // make sure there isn't an exact match for this somewhere else in
         // fromParameters
-        Parameter toParam = toParameters.get(bestMatch);
-        ASTFormalParameter to = toParam.getParameter();
+        ASTFormalParameter to = toFormalParams.get(bestMatch);
 
-        int fromMatch = getExactMatch(fromParameters, to);
+        int fromMatch = getExactMatch(fromFormalParams, to);
 
         if (fromMatch >= 0) {
             return new int[] { -1, -1 };
         }
         else {
-            clearFromLists(fromParameters, fromIdx, toParameters, bestMatch);
+            clearFromLists(fromFormalParams, fromIdx, toFormalParams, bestMatch);
             return new int[] { typeMatch, nameMatch };
         }
     }
@@ -242,10 +209,10 @@ public class ParameterUtil extends SimpleNodeUtil {
      * Returns 0 for exact match, +1 for misordered match, -1 for no match.
      */
     protected static int getListMatch(List<String> fromList, int fromIndex, List<String> toList) {
-        int    fromSize = fromList.size();
-        int    toSize = toList.size();
-        String fromStr  = fromIndex < fromSize ? fromList.get(fromIndex) : null;
-        String toStr  = fromIndex < toSize ? toList.get(fromIndex) : null;
+        int fromSize = fromList.size();
+        int toSize = toList.size();
+        String fromStr = fromIndex < fromSize ? fromList.get(fromIndex) : null;
+        String toStr = fromIndex < toSize ? toList.get(fromIndex) : null;
         
         if (fromStr == null) {
             return -1;
@@ -268,11 +235,9 @@ public class ParameterUtil extends SimpleNodeUtil {
         return -1;
     }
 
-    protected static int getExactMatch(List<Parameter> fromParameters, ASTFormalParameter to) {
+    protected static int getExactMatch(List<ASTFormalParameter> fromParameters, ASTFormalParameter to) {
         int idx = 0;
-        for (Parameter param : fromParameters) {
-            ASTFormalParameter from = param == null ? null : param.getParameter();
-
+        for (ASTFormalParameter from : fromParameters) {
             if (areTypesEqual(from, to) && areNamesEqual(from, to)) {
                 return idx;
             }
