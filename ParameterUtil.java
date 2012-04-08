@@ -47,7 +47,7 @@ public class ParameterUtil extends SimpleNodeUtil {
         int  nParams = params.jjtGetNumChildren();
         for (int i = 0; i < nParams; ++i) {
             ASTFormalParameter param = (ASTFormalParameter)params.jjtGetChild(i);
-            String             type  = new Parameter(param).getType();
+            String             type  = getParameterType(param);
             types.add(type);
         }
         return types;
@@ -112,29 +112,57 @@ public class ParameterUtil extends SimpleNodeUtil {
         }
     }
 
+    protected static void clearFromLists(List<Parameter> fromParameters, int fromIdx, List<Parameter> toParameters, int toIdx) {
+        fromParameters.set(fromIdx, null);
+        toParameters.set(toIdx, null);
+    }
+
+    protected static List<ASTFormalParameter> toFormalParamList(List<Parameter> parameters) {
+        List<ASTFormalParameter > formalParams = new ArrayList<ASTFormalParameter>();
+        for (Parameter param : parameters) {
+            formalParams.add(param == null ? null : param.getParameter());
+        }
+        return formalParams;
+    }
+
     public static int[] getMatch(List<Parameter> fromParameters, int fromIdx, List<Parameter> toParameters) {
         int typeMatch = -1;
         int nameMatch = -1;
-        
+
         Parameter fromParam = fromParameters.get(fromIdx);
 
-        for (int toIdx = 0; toIdx < toParameters.size(); ++toIdx) {
-            Parameter toParam = toParameters.get(toIdx);
+        tr.Ace.onRed("fromParam", fromParam);
+        tr.Ace.onRed("fromParam.type", fromParam.getType());
 
-            if (toParam != null) {
-                if (fromParam.getType().equals(toParam.getType())) {
-                    typeMatch = toIdx;
-                }
+        ASTFormalParameter fp = fromParam.getParameter();
+        tr.Ace.onRed("fp", fp);
+        tr.Ace.onRed("type(fp)", getParameterType(fp));
 
-                if (fromParam.getName().equals(toParam.getName())) {
-                    nameMatch = toIdx;
-                }
+        List<ASTFormalParameter> fromFormalParams = toFormalParamList(fromParameters);
+        List<ASTFormalParameter> toFormalParams = toFormalParamList(toParameters);
 
-                if (typeMatch == toIdx && nameMatch == toIdx) {
-                    fromParameters.set(fromIdx, null);
-                    toParameters.set(toIdx, null);
-                    return new int[] { typeMatch, nameMatch };
-                }
+        for (int toIdx = 0; toIdx < toFormalParams.size(); ++toIdx) {
+            ASTFormalParameter tp = toFormalParams.get(toIdx);
+
+            if (tp == null) {
+                continue;
+            }
+
+            // ASTFormalParameter tp = toFormalParams.get();
+            tr.Ace.onRed("tp", tp);
+            tr.Ace.onRed("type(tp)", getParameterType(tp));
+
+            if (areTypesEqual(fp, tp)) {
+                typeMatch = toIdx;
+            }
+
+            if (areNamesEqual(fp, tp)) {
+                nameMatch = toIdx;
+            }
+
+            if (typeMatch == toIdx && nameMatch == toIdx) {
+                clearFromLists(fromParameters, fromIdx, toParameters, toIdx);
+                return new int[] { typeMatch, nameMatch };
             }
         }
 
@@ -143,113 +171,109 @@ public class ParameterUtil extends SimpleNodeUtil {
             bestMatch = nameMatch;
         }
         
-        if (bestMatch >= 0) {
-            // make sure there isn't an exact match for this somewhere else in
-            // fromParameters
-            Parameter toParam = toParameters.get(bestMatch);
+        if (bestMatch < 0) {
+            return new int[] { -1, -1 };
+        }
 
-            int fromMatch = getExactMatch(fromParameters, toParam);
+        // make sure there isn't an exact match for this somewhere else in
+        // fromParameters
+        Parameter toParam = toParameters.get(bestMatch);
+        ASTFormalParameter to = toParam.getParameter();
 
-            if (fromMatch >= 0) {
-                return new int[] { -1, -1 };
-            }
-            else {
-                fromParameters.set(fromIdx, null);
-                toParameters.set(bestMatch, null);
-                return new int[] { typeMatch, nameMatch };
-            }
+        int fromMatch = getExactMatch(fromParameters, to);
+
+        if (fromMatch >= 0) {
+            return new int[] { -1, -1 };
         }
         else {
-            return new int[] { -1, -1 };
+            clearFromLists(fromParameters, fromIdx, toParameters, bestMatch);
+            return new int[] { typeMatch, nameMatch };
         }
     }
 
-    public static double getMatchScore(ASTFormalParameters a, ASTFormalParameters b) {
-        double score;
-        
-        if (a.jjtGetNumChildren() == 0 && b.jjtGetNumChildren() == 0) {
-            score = 1.0;
+    public static double getMatchScore(ASTFormalParameters from, ASTFormalParameters to) {
+        if (from.jjtGetNumChildren() == 0 && to.jjtGetNumChildren() == 0) {
+            return 1.0;
         }
-        else {
-            // (int[], double, String) <=> (int[], double, String) ==> 100% (3 of 3)
-            // (int[], double, String) <=> (double, int[], String) ==> 80% (3 of 3 - 10% * misordered)
-            // (int[], double)         <=> (double, int[], String) ==> 46% (2 of 3 - 10% * misordered)
-            // (int[], double, String) <=> (String) ==> 33% (1 of 3 params)
-            // (int[], double) <=> (String) ==> 0 (0 of 3)
+        
+        // (int[], double, String) <=> (int[], double, String) ==> 100% (3 of 3)
+        // (int[], double, String) <=> (double, int[], String) ==> 80% (3 of 3 - 10% * misordered)
+        // (int[], double)         <=> (double, int[], String) ==> 46% (2 of 3 - 10% * misordered)
+        // (int[], double, String) <=> (String) ==> 33% (1 of 3 params)
+        // (int[], double) <=> (String) ==> 0 (0 of 3)
 
-            List<String> aParamTypes = getParameterTypes(a);
-            List<String> bParamTypes = getParameterTypes(b);
+        List<String> fromParamTypes = getParameterTypes(from);
+        List<String> toParamTypes = getParameterTypes(to);
 
-            int aSize = aParamTypes.size();
-            int bSize = bParamTypes.size();
+        int fromSize = fromParamTypes.size();
+        int toSize = toParamTypes.size();
 
-            int exactMatches = 0;
-            int misorderedMatches = 0;
+        int exactMatches = 0;
+        int misorderedMatches = 0;
             
-            for (int ai = 0; ai < aSize; ++ai) {
-                int paramMatch = getListMatch(aParamTypes, ai, bParamTypes);
-                if (paramMatch == ai) {
-                    ++exactMatches;
-                }
-                else if (paramMatch >= 0) {
-                    ++misorderedMatches;
-                }
+        for (int fromIdx = 0; fromIdx < fromSize; ++fromIdx) {
+            int paramMatch = getListMatch(fromParamTypes, fromIdx, toParamTypes);
+            if (paramMatch == fromIdx) {
+                ++exactMatches;
             }
-
-            for (int bi = 0; bi < bSize; ++bi) {
-                int paramMatch = getListMatch(bParamTypes, bi, aParamTypes);
-                if (paramMatch == bi) {
-                    ++exactMatches;
-                }
-                else if (paramMatch >= 0) {
-                    ++misorderedMatches;
-                }
+            else if (paramMatch >= 0) {
+                ++misorderedMatches;
             }
-
-            int numParams = Math.max(aSize, bSize);
-            double match = (double)exactMatches / numParams;
-            match += (double)misorderedMatches / (2 * numParams);
-
-            score = 0.5 + (match / 2.0);
         }
-        
-        return score;
+
+        for (int toIdx = 0; toIdx < toSize; ++toIdx) {
+            int paramMatch = getListMatch(toParamTypes, toIdx, fromParamTypes);
+            if (paramMatch == toIdx) {
+                ++exactMatches;
+            }
+            else if (paramMatch >= 0) {
+                ++misorderedMatches;
+            }
+        }
+
+        int numParams = Math.max(fromSize, toSize);
+        double match = (double)exactMatches / numParams;
+        match += (double)misorderedMatches / (2 * numParams);
+
+        return 0.5 + (match / 2.0);
     }
 
     /**
      * Returns 0 for exact match, +1 for misordered match, -1 for no match.
      */
-    protected static int getListMatch(List<String> aList, int aIndex, List<String> bList) {
-        int    aSize = aList.size();
-        int    bSize = bList.size();
-        String aStr  = aIndex < aSize ? aList.get(aIndex) : null;
-        String bStr  = aIndex < bSize ? bList.get(aIndex) : null;
+    protected static int getListMatch(List<String> fromList, int fromIndex, List<String> toList) {
+        int    fromSize = fromList.size();
+        int    toSize = toList.size();
+        String fromStr  = fromIndex < fromSize ? fromList.get(fromIndex) : null;
+        String toStr  = fromIndex < toSize ? toList.get(fromIndex) : null;
         
-        if (aStr == null) {
+        if (fromStr == null) {
             return -1;
         }
-        if (aStr.equals(bStr)) {
-            aList.set(aIndex, null);
-            bList.set(aIndex, null);
-            return aIndex;
+        
+        if (fromStr.equals(toStr)) {
+            fromList.set(fromIndex, null);
+            toList.set(fromIndex, null);
+            return fromIndex;
         }
-        else {
-            for (int bi = 0; bi < bSize; ++bi) {
-                bStr = bList.get(bi);
-                if (aStr.equals(bStr)) {
-                    aList.set(aIndex, null);
-                    bList.set(bi, null);
-                    return bi;
-                }
+        
+        for (int toIdx = 0; toIdx < toSize; ++toIdx) {
+            toStr = toList.get(toIdx);
+            if (fromStr.equals(toStr)) {
+                fromList.set(fromIndex, null);
+                toList.set(toIdx, null);
+                return toIdx;
             }
-            return -1;
         }
+        return -1;
     }
 
-    protected static int getExactMatch(List<Parameter> parameters, Parameter other) {
+    protected static int getExactMatch(List<Parameter> fromParameters, ASTFormalParameter to) {
         int idx = 0;
-        for (Parameter param : parameters) {
-            if (param != null && param.getType().equals(other.getType()) && param.getName().equals(other.getName())) {
+        for (Parameter param : fromParameters) {
+            ASTFormalParameter from = param == null ? null : param.getParameter();
+
+            if (areTypesEqual(from, to) && areNamesEqual(from, to)) {
                 return idx;
             }
             else {
@@ -259,4 +283,11 @@ public class ParameterUtil extends SimpleNodeUtil {
         return -1;
     }
 
+    protected static boolean areTypesEqual(ASTFormalParameter from, ASTFormalParameter to) {
+        return from != null && getParameterType(from).equals(getParameterType(to));
+    }
+
+    protected static boolean areNamesEqual(ASTFormalParameter from, ASTFormalParameter to) {
+        return from != null && getParameterName(from).image.equals(getParameterName(to).image);
+    }
 }
