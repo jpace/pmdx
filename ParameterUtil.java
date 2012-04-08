@@ -66,6 +66,10 @@ public class ParameterUtil extends SimpleNodeUtil {
     }
 
     public static Token getParameterName(ASTFormalParameter param) {
+        return getParameterNameToken(param);
+    }
+
+    public static Token getParameterNameToken(ASTFormalParameter param) {
         if (param == null) {
             return null;
         }
