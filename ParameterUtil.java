@@ -105,13 +105,9 @@ public class ParameterUtil extends SimpleNodeUtil {
         toParameters.set(toIdx, null);
     }
 
-    public static int[] getMatch(List<ASTFormalParameter> fromFormalParams, int fromIdx, List<ASTFormalParameter> toFormalParams) {
-        int typeMatch = -1;
-        int nameMatch = -1;
-
+    public static Integer[] getParamMatches(List<ASTFormalParameter> fromFormalParams, int fromIdx, List<ASTFormalParameter> toFormalParams) {
+        Integer[] typeAndNameMatch = new Integer[] { -1, -1 };
         ASTFormalParameter fp = fromFormalParams.get(fromIdx);
-        tr.Ace.onRed("fp", fp);
-        tr.Ace.onRed("type(fp)", getParameterType(fp));
 
         for (int toIdx = 0; toIdx < toFormalParams.size(); ++toIdx) {
             ASTFormalParameter tp = toFormalParams.get(toIdx);
@@ -121,26 +117,33 @@ public class ParameterUtil extends SimpleNodeUtil {
             }
 
             if (areTypesEqual(fp, tp)) {
-                typeMatch = toIdx;
+                typeAndNameMatch[0] = toIdx;
             }
 
             if (areNamesEqual(fp, tp)) {
-                nameMatch = toIdx;
+                typeAndNameMatch[1] = toIdx;
             }
 
-            if (typeMatch == toIdx && nameMatch == toIdx) {
-                clearFromLists(fromFormalParams, fromIdx, toFormalParams, toIdx);
-                return new int[] { typeMatch, nameMatch };
+            if (typeAndNameMatch[0] == toIdx && typeAndNameMatch[1] == toIdx) {
+                return typeAndNameMatch;
             }
         }
+        return typeAndNameMatch;
+    }
 
-        int bestMatch = typeMatch;
-        if (bestMatch < 0) {
-            bestMatch = nameMatch;
+    public static Integer[] getMatch(List<ASTFormalParameter> fromFormalParams, int fromIdx, List<ASTFormalParameter> toFormalParams) {
+        final Integer[] noMatch = new Integer[] { -1, -1 };
+
+        Integer[] typeAndNameMatch = getParamMatches(fromFormalParams, fromIdx, toFormalParams);
+        if (typeAndNameMatch[0] >= 0 && typeAndNameMatch[0] == typeAndNameMatch[1]) {
+            clearFromLists(fromFormalParams, fromIdx, toFormalParams, typeAndNameMatch[1]);
+            return typeAndNameMatch;
         }
+
+        Integer bestMatch = typeAndNameMatch[0] >= 0 ? typeAndNameMatch[0] : typeAndNameMatch[1];
         
         if (bestMatch < 0) {
-            return new int[] { -1, -1 };
+            return noMatch;
         }
 
         // make sure there isn't an exact match for this somewhere else in
@@ -150,11 +153,11 @@ public class ParameterUtil extends SimpleNodeUtil {
         int fromMatch = getExactMatch(fromFormalParams, to);
 
         if (fromMatch >= 0) {
-            return new int[] { -1, -1 };
+            return noMatch;
         }
         else {
             clearFromLists(fromFormalParams, fromIdx, toFormalParams, bestMatch);
-            return new int[] { typeMatch, nameMatch };
+            return typeAndNameMatch;
         }
     }
 
