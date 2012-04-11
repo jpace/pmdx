@@ -140,37 +140,18 @@ public class SimpleNodeUtil {
     /**
      * Returns a list of child tokens, non-hierarchically.
      */
-    public static List<Token> getChildrenSerially(SimpleNode node) {
-        return getChildrenSerially(node, new ArrayList<Token>());
-    }
-
-    /**
-     * Returns a list of child tokens, non-hierarchically.
-     */
-    public static List<Token> getChildrenSerially(SimpleNode node, List<Token> list) {
-        List<Token> children = list;
+    public static List<Token> getChildTokens(SimpleNode node) {
+        List<Token> children = new ArrayList<Token>();
         
-        Token t = new Token();
-        t.next = node.getFirstToken();
+        Token tk = node.getFirstToken();
+        Token lastTk = node.getLastToken();
         
-        int nChildren = node.jjtGetNumChildren();
-        for (int ord = 0; ord < nChildren; ++ord) {
-            SimpleNode n = (SimpleNode)node.jjtGetChild(ord);
-            while (true) {
-                t = t.next;
-                if (t == n.getFirstToken()) {
-                    break;
-                }
-                children.add(t);
+        while (tk != null) {
+            children.add(tk);
+            if (tk == lastTk) { // yes, ==, not equals
+                break;
             }
-            getChildrenSerially(n, children);
-
-            t = n.getLastToken();
-        }
-
-        while (t != node.getLastToken()) {
-            t = t.next;
-            children.add(t);
+            tk = tk.next;
         }
 
         return children;
