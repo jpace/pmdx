@@ -281,8 +281,8 @@ public class SimpleNodeUtil {
     }
 
     /**
-     * Returns whether the node has a matching token, occurring prior to any
-     * non-tokens (i.e., before any child nodes).
+     * Returns the matching token, occurring prior to any non-tokens (i.e.,
+     * before any child nodes).
      */
     public static Token getLeadingToken(SimpleNode node, int tokenType) {
         if (node.jjtGetNumChildren() == 0) {
