@@ -17,7 +17,7 @@ import org.incava.ijdk.util.CollectionExt;
  */
 public class FieldUtil extends SimpleNodeUtil {
     public static Token getName(ASTVariableDeclarator vd) {
-        ASTVariableDeclaratorId vid = (ASTVariableDeclaratorId)findChild(vd, "net.sourceforge.pmd.ast.ASTVariableDeclaratorId");
+        ASTVariableDeclaratorId vid = findChild(vd, ASTVariableDeclaratorId.class);
         return vid.getFirstToken();
     }
 
@@ -57,8 +57,8 @@ public class FieldUtil extends SimpleNodeUtil {
         int     count   = Math.max(aNames.size(), bNames.size());
         double  score   = 0.5 * matched / count;
 
-        ASTType aType   = (ASTType)findChild(afd, "net.sourceforge.pmd.ast.ASTType");
-        ASTType bType   = (ASTType)findChild(bfd, "net.sourceforge.pmd.ast.ASTType");
+        ASTType aType   = findChild(afd, ASTType.class);
+        ASTType bType   = findChild(bfd, ASTType.class);
 
         if (toString(aType).equals(toString(bType))) {
             score += 0.5;

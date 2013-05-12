@@ -14,12 +14,12 @@ import net.sourceforge.pmd.ast.Token;
  */
 public class TypeDeclarationUtil extends SimpleNodeUtil {
     public static Token getName(ASTTypeDeclaration typeDecl) {
-        ASTClassOrInterfaceDeclaration cidecl = (ASTClassOrInterfaceDeclaration)findChild(typeDecl, "net.sourceforge.pmd.ast.ASTClassOrInterfaceDeclaration");
+        ASTClassOrInterfaceDeclaration cidecl = findChild(typeDecl, ASTClassOrInterfaceDeclaration.class);
         return cidecl == null ? null : cidecl.getFirstToken().next;
     }
 
     public static ASTClassOrInterfaceDeclaration getType(ASTTypeDeclaration typeDecl) {
-        return (ASTClassOrInterfaceDeclaration)SimpleNodeUtil.findChild(typeDecl, "net.sourceforge.pmd.ast.ASTClassOrInterfaceDeclaration");
+        return findChild(typeDecl, ASTClassOrInterfaceDeclaration.class);
     }
 
     public static ASTTypeDeclaration findTypeDeclaration(String name, List<ASTTypeDeclaration> types) {
@@ -40,7 +40,7 @@ public class TypeDeclarationUtil extends SimpleNodeUtil {
      * and interfaces.
      */
     public static List<ASTClassOrInterfaceBodyDeclaration> getDeclarations(ASTTypeDeclaration tdecl) {
-        ASTClassOrInterfaceDeclaration cidecl = (ASTClassOrInterfaceDeclaration)findChild(tdecl, "net.sourceforge.pmd.ast.ASTClassOrInterfaceDeclaration");
+        ASTClassOrInterfaceDeclaration cidecl = findChild(tdecl, ASTClassOrInterfaceDeclaration.class);
         return getDeclarations(cidecl);
     }
 
@@ -49,7 +49,7 @@ public class TypeDeclarationUtil extends SimpleNodeUtil {
      * and interfaces.
      */
     public static List<ASTClassOrInterfaceBodyDeclaration> getDeclarations(ASTClassOrInterfaceDeclaration coid) {
-        ASTClassOrInterfaceBody body = (ASTClassOrInterfaceBody)findChild(coid, "net.sourceforge.pmd.ast.ASTClassOrInterfaceBody");
+        ASTClassOrInterfaceBody body = findChild(coid, ASTClassOrInterfaceBody.class);
         return snatchChildren(body, "net.sourceforge.pmd.ast.ASTClassOrInterfaceBodyDeclaration");
     }
 
@@ -65,7 +65,7 @@ public class TypeDeclarationUtil extends SimpleNodeUtil {
      * Returns the real declaration, which is a method, field, constructor, or
      * inner class or interface.
      */
-    public static SimpleNode getDeclaration(ASTClassOrInterfaceBodyDeclaration bdecl, Class<? extends SimpleNode> cls) {
+    public static <NodeType extends SimpleNode> NodeType getDeclaration(ASTClassOrInterfaceBodyDeclaration bdecl, Class<NodeType> cls) {
         return hasChildren(bdecl) ? findChild(bdecl, cls) : null;
     }
 

@@ -112,12 +112,29 @@ public class SimpleNodeUtil {
         return null;
     }
 
-    public static SimpleNode findChild(SimpleNode parent, Class childType) {
-        return findChild(parent, getClassName(childType), 0);
+    public static <NodeType extends SimpleNode> NodeType findChild(SimpleNode parent, Class<NodeType> childType) {
+        return findChild(parent, childType, 0);
     }
 
-    public static SimpleNode findChild(SimpleNode parent, Class childType, int index) {
-        return findChild(parent, getClassName(childType), index);
+    @SuppressWarnings("unchecked")
+    public static <NodeType extends SimpleNode> NodeType findChild(SimpleNode parent, Class<NodeType> childType, int index) {
+        if (index < 0 || isNull(parent)) {
+            return null;
+        }
+
+        int nChildren = parent.jjtGetNumChildren();
+        if (index >= nChildren) {
+            return null;
+        }
+
+        int nFound = -1;
+        for (int idx = 0; idx < nChildren; ++idx) {
+            SimpleNode child = getChildOfType(parent, childType, idx);
+            if (isNotNull(child) && ++nFound == index) {
+                return (NodeType)child;
+            }
+        }
+        return null;
     }
 
     /**
@@ -133,8 +150,10 @@ public class SimpleNodeUtil {
      * Returns the node if the class of the child at the given index matches the
      * given class type. If the given one is null, the child will match.
      */
-    private static SimpleNode getChildOfType(SimpleNode parent, Class childType, int index) {
-        return getChildOfType(parent, getClassName(childType), index);
+    @SuppressWarnings("unchecked")
+    private static <NodeType extends SimpleNode> NodeType getChildOfType(SimpleNode parent, Class<NodeType> childType, int index) {
+        SimpleNode child = (SimpleNode)parent.jjtGetChild(index);
+        return isNull(childType) || child.getClass().equals(childType) ? (NodeType)child : null;
     }
 
     /**

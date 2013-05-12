@@ -11,7 +11,7 @@ import net.sourceforge.pmd.ast.Token;
  */
 public class VariableUtil extends SimpleNodeUtil {
     public static Token getName(ASTVariableDeclarator vd) {
-        ASTVariableDeclaratorId vid = (ASTVariableDeclaratorId)findChild(vd, "net.sourceforge.pmd.ast.ASTVariableDeclaratorId");
+        ASTVariableDeclaratorId vid = findChild(vd, ASTVariableDeclaratorId.class);
         return vid.getFirstToken();
     }
 

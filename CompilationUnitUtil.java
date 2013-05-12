@@ -11,7 +11,7 @@ import net.sourceforge.pmd.ast.ASTTypeDeclaration;
  */
 public class CompilationUnitUtil {
     public static ASTPackageDeclaration getPackage(ASTCompilationUnit cu) {
-        return (ASTPackageDeclaration)SimpleNodeUtil.findChild(cu, "net.sourceforge.pmd.ast.ASTPackageDeclaration");
+        return SimpleNodeUtil.findChild(cu, ASTPackageDeclaration.class);
     }
 
     public static List<ASTImportDeclaration> getImports(ASTCompilationUnit cu) {

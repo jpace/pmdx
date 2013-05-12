@@ -13,11 +13,11 @@ public class ThrowsUtil extends SimpleNodeUtil {
     }
 
     public static String getName(ASTNameList names, int index) {
-        ASTName name = (ASTName)findChild(names, "net.sourceforge.pmd.ast.ASTName", index);
+        ASTName name = findChild(names, ASTName.class, index);
         return name == null ? null : toString(name);
     }
 
     public static ASTName getNameNode(ASTNameList names, int index) {
-        return (ASTName)findChild(names, "net.sourceforge.pmd.ast.ASTName", index);
+        return findChild(names, ASTName.class, index);
     }
 }

@@ -20,7 +20,7 @@ public class MethodUtil extends FunctionUtil {
     }
 
     public static ASTMethodDeclarator getDeclarator(ASTMethodDeclaration method) {
-        return (ASTMethodDeclarator)findChild(method, "net.sourceforge.pmd.ast.ASTMethodDeclarator");
+        return findChild(method, ASTMethodDeclarator.class);
     }
     
     public static Token getName(ASTMethodDeclaration method) {
@@ -30,7 +30,7 @@ public class MethodUtil extends FunctionUtil {
 
     public static ASTFormalParameters getParameters(ASTMethodDeclaration method) {
         ASTMethodDeclarator decl = getDeclarator(method);
-        return (ASTFormalParameters)findChild(decl, "net.sourceforge.pmd.ast.ASTFormalParameters");
+        return findChild(decl, ASTFormalParameters.class);
     }
 
     public static String getFullName(ASTMethodDeclaration method) {
