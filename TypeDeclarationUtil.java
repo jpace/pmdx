@@ -50,7 +50,7 @@ public class TypeDeclarationUtil extends SimpleNodeUtil {
      */
     public static List<ASTClassOrInterfaceBodyDeclaration> getDeclarations(ASTClassOrInterfaceDeclaration coid) {
         ASTClassOrInterfaceBody body = findChild(coid, ASTClassOrInterfaceBody.class);
-        return snatchChildren(body, "net.sourceforge.pmd.ast.ASTClassOrInterfaceBodyDeclaration");
+        return snatchChildren(body, ASTClassOrInterfaceBodyDeclaration.class);
     }
 
     /**

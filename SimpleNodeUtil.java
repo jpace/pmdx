@@ -203,6 +203,30 @@ public class SimpleNodeUtil {
         }
         return list;
     }
+    
+    @SuppressWarnings("unchecked")
+    public static <NodeType extends SimpleNode> List<NodeType> snatchChildren(SimpleNode parent, Class<NodeType> childType) {
+        List<NodeType> list = new ArrayList<NodeType>();
+        int nChildren = parent == null ? 0 : parent.jjtGetNumChildren();
+        for (int i = 0; i < nChildren; ++i) {
+            SimpleNode child = (SimpleNode)parent.jjtGetChild(i);
+            if (childType == null || child.getClass().equals(childType)) {
+                list.add((NodeType)child);
+            }
+        }
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <NodeType extends SimpleNode> List<NodeType> snatchChildren(SimpleNode parent) {
+        List<NodeType> list = new ArrayList<NodeType>();
+        int nChildren = parent == null ? 0 : parent.jjtGetNumChildren();
+        for (int i = 0; i < nChildren; ++i) {
+            SimpleNode child = (SimpleNode)parent.jjtGetChild(i);
+            list.add((NodeType)child);
+        }
+        return list;
+    }
 
     public static <NodeType extends SimpleNode> SimpleNode[] findChildren(SimpleNode parent, Class<NodeType> childType) {
         List<SimpleNode> children = new ArrayList<SimpleNode>();

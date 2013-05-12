@@ -1,6 +1,5 @@
 package org.incava.pmdx;
 
-import java.util.Collection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +21,7 @@ public class FieldUtil extends SimpleNodeUtil {
     }
 
     public static List<ASTVariableDeclarator> getVariableDeclarators(ASTFieldDeclaration fld) {
-        return snatchChildren(fld, "net.sourceforge.pmd.ast.ASTVariableDeclarator");
+        return snatchChildren(fld, ASTVariableDeclarator.class);
     }
 
     /**
