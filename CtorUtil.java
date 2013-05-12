@@ -14,7 +14,7 @@ public class CtorUtil extends FunctionUtil {
    }
 
     public static ASTFormalParameters getParameters(ASTConstructorDeclaration ctor) {
-        return (ASTFormalParameters)SimpleNodeUtil.findChild(ctor, "net.sourceforge.pmd.ast.ASTFormalParameters");
+        return (ASTFormalParameters)findChild(ctor, "net.sourceforge.pmd.ast.ASTFormalParameters");
     }
     
     public static double getMatchScore(ASTConstructorDeclaration a, ASTConstructorDeclaration b) {
