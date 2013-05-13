@@ -175,21 +175,6 @@ public class SimpleNodeUtil {
 
         return children;
     }
-
-    public static <NodeType extends SimpleNode> void fetchChildren(Collection<? super NodeType> coll, SimpleNode parent, Class<NodeType> childType) {
-        fetchChildren(coll, parent, childType == null ? null : childType.getName());
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static <NodeType extends SimpleNode> void fetchChildren(Collection<? super NodeType> coll, SimpleNode parent, String childType) {
-        int nChildren = parent == null ? 0 : parent.jjtGetNumChildren();
-        for (int i = 0; i < nChildren; ++i) {
-            SimpleNode child = (SimpleNode)parent.jjtGetChild(i);
-            if (childType == null || child.getClass().getName().equals(childType)) {
-                coll.add((NodeType)child);
-            }
-        }
-    }
     
     @SuppressWarnings("unchecked")
     public static <NodeType extends SimpleNode> List<NodeType> snatchChildren(SimpleNode parent, String childType) {
@@ -344,7 +329,7 @@ public class SimpleNodeUtil {
     public static void print(SimpleNode node, String prefix) {
         Token first = node.getFirstToken();
         Token last  = node.getLastToken();
-        tr.Ace.log(prefix + node.toString() + ":" + getLocation(first, last));
+        tr.Ace.log(prefix + node.toString() + ":" + TokenUtil.getLocation(first, last));
     }
 
     public static void dump(SimpleNode node) {
@@ -368,30 +353,14 @@ public class SimpleNodeUtil {
         if (obj instanceof Token) {
             Token tk = (Token)obj;                
             if (showWhitespace && tk.specialToken != null) {
-                dumpToken(tk.specialToken, prefix);
+                TokenUtil.dumpToken(tk.specialToken, prefix);
             }                
-            tr.Ace.log(prefix + "    \"" + tk + "\" " + getLocation(tk, tk) + " (" + tk.kind + ")");
+            tr.Ace.log(prefix + "    \"" + tk + "\" " + TokenUtil.getLocation(tk, tk) + " (" + tk.kind + ")");
         }
         else {
             SimpleNode sn = (SimpleNode)obj;
             dump(sn, prefix + "    ", showWhitespace);
         }
-    }
-
-    public static void dumpToken(Token st, String prefix) {
-        while (st.specialToken != null) {
-            st = st.specialToken;
-        }
-                        
-        while (st != null) {
-            String s = st.toString().replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r");
-            tr.Ace.log(prefix + "    s[" + getLocation(st, st) + "] \"" + s + "\"");
-            st = st.next;
-        }
-    }
-
-    protected static String getLocation(Token t1, Token t2) {
-        return "[" + t1.beginLine + ":" + t1.beginColumn + ":" + t2.endLine + ":" + t2.endColumn + "]";
     }
 
     /**
