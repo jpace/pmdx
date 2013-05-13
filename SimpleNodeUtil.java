@@ -228,28 +228,6 @@ public class SimpleNodeUtil {
         return list;
     }
 
-    public static <NodeType extends SimpleNode> SimpleNode[] findChildren(SimpleNode parent, Class<NodeType> childType) {
-        List<SimpleNode> children = new ArrayList<SimpleNode>();
-        fetchChildren(children, parent, childType);
-
-        if (childType == null) {
-            return children.toArray(new SimpleNode[children.size()]);
-        }
-        else {
-            int size = children.size();
-            SimpleNode[] ary = (SimpleNode[])java.lang.reflect.Array.newInstance(childType, size);
-            System.arraycopy(children.toArray(), 0, ary, 0, size);
-            return ary;
-        }
-    }
-
-    /**
-     * Returns all children of the node.
-     */
-    public static SimpleNode[] findChildren(SimpleNode parent) {
-        return findChildren(parent, null);
-    }
-
     /**
      * @todo remove -- this doesn't seem to be used.
      */
