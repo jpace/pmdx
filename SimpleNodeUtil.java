@@ -18,12 +18,12 @@ public class SimpleNodeUtil {
     public static String toString(SimpleNode node) {
         Token tk = node.getFirstToken();
         Token last = node.getLastToken();
-        String str = tk.image;
+        StringBuilder sb = new StringBuilder(tk.image);
         while (tk != last) {
             tk = tk.next;
-            str += tk.image;
+            sb.append(tk.image);
         }
-        return str;
+        return sb.toString();
     }
 
     /**
@@ -85,31 +85,7 @@ public class SimpleNodeUtil {
     }
 
     public static SimpleNode findChild(SimpleNode parent) {
-        return findChild(parent, (String)null, 0);
-    }
-
-    public static SimpleNode findChild(SimpleNode parent, String childType) {
-        return findChild(parent, childType, 0);
-    }
-
-    public static SimpleNode findChild(SimpleNode parent, String childType, int index) {
-        if (index < 0 || isNull(parent)) {
-            return null;
-        }
-
-        int nChildren = parent.jjtGetNumChildren();
-        if (index >= nChildren) {
-            return null;
-        }
-
-        int nFound = -1;
-        for (int idx = 0; idx < nChildren; ++idx) {
-            SimpleNode child = getChildOfType(parent, childType, idx);
-            if (isNotNull(child) && ++nFound == index) {
-                return child;
-            }
-        }
-        return null;
+        return findChild(parent, null);
     }
 
     public static <NodeType extends SimpleNode> NodeType findChild(SimpleNode parent, Class<NodeType> childType) {
@@ -141,15 +117,6 @@ public class SimpleNodeUtil {
      * Returns the node if the class of the child at the given index matches the
      * given class type. If the given one is null, the child will match.
      */
-    private static SimpleNode getChildOfType(SimpleNode parent, String childType, int index) {
-        SimpleNode child = (SimpleNode)parent.jjtGetChild(index);
-        return isNull(childType) || child.getClass().getName().equals(childType) ? child : null;
-    }
-
-    /**
-     * Returns the node if the class of the child at the given index matches the
-     * given class type. If the given one is null, the child will match.
-     */
     @SuppressWarnings("unchecked")
     private static <NodeType extends SimpleNode> NodeType getChildOfType(SimpleNode parent, Class<NodeType> childType, int index) {
         SimpleNode child = (SimpleNode)parent.jjtGetChild(index);
@@ -174,19 +141,6 @@ public class SimpleNodeUtil {
         }
 
         return children;
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static <NodeType extends SimpleNode> List<NodeType> snatchChildren(SimpleNode parent, String childType) {
-        List<NodeType> list = new ArrayList<NodeType>();
-        int nChildren = parent == null ? 0 : parent.jjtGetNumChildren();
-        for (int i = 0; i < nChildren; ++i) {
-            SimpleNode child = (SimpleNode)parent.jjtGetChild(i);
-            if (childType == null || child.getClass().getName().equals(childType)) {
-                list.add((NodeType)child);
-            }
-        }
-        return list;
     }
     
     @SuppressWarnings("unchecked")
