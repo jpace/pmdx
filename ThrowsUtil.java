@@ -9,7 +9,7 @@ import net.sourceforge.pmd.ast.ASTNameList;
  */
 public class ThrowsUtil extends SimpleNodeUtil {
     public static List<ASTName> getNames(ASTNameList names) {
-        return snatchChildren(names, ASTName.class);
+        return findChildren(names, ASTName.class);
     }
 
     public static String getName(ASTNameList names, int index) {

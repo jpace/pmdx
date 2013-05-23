@@ -13,7 +13,7 @@ import net.sourceforge.pmd.ast.Token;
  */
 public class ParameterUtil extends SimpleNodeUtil {
     public static List<ASTFormalParameter> getParameters(ASTFormalParameters params) {
-        return snatchChildren(params, ASTFormalParameter.class);
+        return findChildren(params, ASTFormalParameter.class);
     }
 
     public static List<Token> getParameterNames(ASTFormalParameters params) {

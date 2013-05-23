@@ -21,7 +21,7 @@ public class FieldUtil extends SimpleNodeUtil {
     }
 
     public static List<ASTVariableDeclarator> getVariableDeclarators(ASTFieldDeclaration fld) {
-        return snatchChildren(fld, ASTVariableDeclarator.class);
+        return findChildren(fld, ASTVariableDeclarator.class);
     }
 
     /**

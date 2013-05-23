@@ -15,10 +15,10 @@ public class CompilationUnitUtil {
     }
 
     public static List<ASTImportDeclaration> getImports(ASTCompilationUnit cu) {
-        return SimpleNodeUtil.snatchChildren(cu, ASTImportDeclaration.class);
+        return SimpleNodeUtil.findChildren(cu, ASTImportDeclaration.class);
     }
 
     public static List<ASTTypeDeclaration> getTypeDeclarations(ASTCompilationUnit cu) {
-        return SimpleNodeUtil.snatchChildren(cu, ASTTypeDeclaration.class);
+        return SimpleNodeUtil.findChildren(cu, ASTTypeDeclaration.class);
     }
 }

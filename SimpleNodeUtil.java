@@ -1,7 +1,6 @@
 package org.incava.pmdx;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import net.sourceforge.pmd.ast.JavaParserConstants;
 import net.sourceforge.pmd.ast.SimpleNode;
@@ -142,9 +141,9 @@ public class SimpleNodeUtil {
 
         return children;
     }
-    
+
     @SuppressWarnings("unchecked")
-    public static <NodeType extends SimpleNode> List<NodeType> snatchChildren(SimpleNode parent, Class<NodeType> childType) {
+    public static <NodeType extends SimpleNode> List<NodeType> findChildren(SimpleNode parent, Class<NodeType> childType) {
         List<NodeType> list = new ArrayList<NodeType>();
         int nChildren = parent == null ? 0 : parent.jjtGetNumChildren();
         for (int i = 0; i < nChildren; ++i) {
@@ -157,14 +156,8 @@ public class SimpleNodeUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static <NodeType extends SimpleNode> List<NodeType> snatchChildren(SimpleNode parent) {
-        List<NodeType> list = new ArrayList<NodeType>();
-        int nChildren = parent == null ? 0 : parent.jjtGetNumChildren();
-        for (int i = 0; i < nChildren; ++i) {
-            SimpleNode child = (SimpleNode)parent.jjtGetChild(i);
-            list.add((NodeType)child);
-        }
-        return list;
+    public static <NodeType extends SimpleNode> List<NodeType> findChildren(SimpleNode parent) {
+        return findChildren(parent, null);
     }
 
     /**
