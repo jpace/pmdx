@@ -2,12 +2,11 @@ package org.incava.pmdx;
 
 import net.sourceforge.pmd.ast.ASTFormalParameters;
 import net.sourceforge.pmd.ast.ASTMethodDeclaration;
-import org.incava.java.MatchCriteria;
 
 /**
  * A criterion (some criteria) for matching nodes.
  */
-public class MethodMatchCriteria extends MatchCriteria {
+public class MethodMatchCriteria {
     private final ASTMethodDeclaration meth;
     private String name = null;
     private ASTFormalParameters params = null;
@@ -16,31 +15,22 @@ public class MethodMatchCriteria extends MatchCriteria {
         meth = m;
     }
 
-    public double compare(MatchCriteria other) {
-        if (other instanceof MethodMatchCriteria) {
-            MethodMatchCriteria mmother = (MethodMatchCriteria)other;
+    public double compare(MethodMatchCriteria other) {
+        String aName = getName();
+        String bName = other.getName();
+
+        double score = 0.0;
+
+        if (aName.equals(bName)) {
+            ASTFormalParameters afp = getParameters();
+            ASTFormalParameters bfp = other.getParameters();
+
+            score = ParameterUtil.getMatchScore(afp, bfp);
+        }
+        // or else this could eventually find methods renamed, if we compare
+        // based on parameters and method contents
             
-            String aName = getName();
-            String bName = mmother.getName();
-
-            double score = 0.0;
-
-            if (aName.equals(bName)) {
-                ASTFormalParameters afp = getParameters();
-                ASTFormalParameters bfp = mmother.getParameters();
-
-                score = ParameterUtil.getMatchScore(afp, bfp);
-            }
-            else {
-                // this could eventually find methods renamed, if we compare based
-                // on parameters and method contents
-            }
-
-            return score;
-        }
-        else {
-            return super.compare(other);
-        }
+        return score;
     }
 
     protected String getName() {
