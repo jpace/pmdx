@@ -23,7 +23,7 @@ public class TokenUtil {
         return "[" + t1.beginLine + ":" + t1.beginColumn + ":" + t2.endLine + ":" + t2.endColumn + "]";
     }
 
-    private static String getClassName(Class cls) {
+    private static String getClassName(Class<?> cls) {
         return cls == null ? null : cls.getName();
     }
 }

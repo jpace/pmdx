@@ -163,7 +163,7 @@ public class SimpleNodeUtil {
     /**
      * @todo remove -- this doesn't seem to be used.
      */
-    public static List<SimpleNode> findDescendants(SimpleNode parent, Class childType) {
+    public static List<SimpleNode> findDescendants(SimpleNode parent, Class<?> childType) {
         List<SimpleNode> kids = new ArrayList<SimpleNode>();
         int nChildren = parent == null ? 0 : parent.jjtGetNumChildren();
         for (int i = 0; i < nChildren; ++i) {
@@ -333,7 +333,7 @@ public class SimpleNodeUtil {
         return 2;
     }
 
-    private static String getClassName(Class cls) {
+    private static String getClassName(Class<?> cls) {
         return cls == null ? null : cls.getName();
     }
 }
