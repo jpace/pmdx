@@ -23,8 +23,8 @@ public class TypeDeclarationUtil extends SimpleNodeUtil {
         for (ASTTypeDeclaration type : types) {
             Token otherName = getName(type);
 
-            if ((otherName == null && name == null) ||
-                (otherName != null && otherName.image.equals(name))) {
+            if (otherName == null && name == null ||
+                otherName != null && otherName.image.equals(name)) {
                 return type;
             }
         }
