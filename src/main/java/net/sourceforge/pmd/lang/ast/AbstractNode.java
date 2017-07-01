@@ -8,17 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import net.sourceforge.pmd.lang.ast.xpath.Attribute;
-import net.sourceforge.pmd.lang.ast.xpath.DocumentNavigator;
-import net.sourceforge.pmd.lang.dfa.DataFlowNode;
-
 public abstract class AbstractNode implements Node {
 
     protected Node parent;
@@ -31,7 +20,6 @@ public abstract class AbstractNode implements Node {
     protected int endLine;
     protected int beginColumn = -1;
     protected int endColumn;
-    private DataFlowNode dataFlowNode;
     private Object userData;
     protected GenericToken firstToken;
     protected GenericToken lastToken;
@@ -177,22 +165,6 @@ public abstract class AbstractNode implements Node {
         this.endColumn = i;
     }
 
-    @Override
-    public DataFlowNode getDataFlowNode() {
-        if (this.dataFlowNode == null) {
-            if (this.parent != null) {
-                return parent.getDataFlowNode();
-            }
-            return null; // TODO wise?
-        }
-        return dataFlowNode;
-    }
-
-    @Override
-    public void setDataFlowNode(DataFlowNode dataFlowNode) {
-        this.dataFlowNode = dataFlowNode;
-    }
-
     /**
      * Returns the n-th parent or null if there are not <code>n</code> ancestors
      *
@@ -312,40 +284,6 @@ public abstract class AbstractNode implements Node {
         return false;
     }
 
-    @Override
-    public Document getAsDocument() {
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document document = db.newDocument();
-            appendElement(document);
-            return document;
-        } catch (ParserConfigurationException pce) {
-            throw new RuntimeException(pce);
-        }
-    }
-
-    protected void appendElement(org.w3c.dom.Node parentNode) {
-        DocumentNavigator docNav = new DocumentNavigator();
-        Document ownerDocument = parentNode.getOwnerDocument();
-        if (ownerDocument == null) {
-            // If the parentNode is a Document itself, it's ownerDocument is
-            // null
-            ownerDocument = (Document) parentNode;
-        }
-        String elementName = docNav.getElementName(this);
-        Element element = ownerDocument.createElement(elementName);
-        parentNode.appendChild(element);
-        for (Iterator<Attribute> iter = docNav.getAttributeAxisIterator(this); iter.hasNext();) {
-            Attribute attr = iter.next();
-            element.setAttribute(attr.getName(), attr.getStringValue());
-        }
-        for (Iterator<Node> iter = docNav.getChildAxisIterator(this); iter.hasNext();) {
-            AbstractNode child = (AbstractNode) iter.next();
-            child.appendElement(element);
-        }
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -412,7 +350,6 @@ public abstract class AbstractNode implements Node {
     @Override
     @SuppressWarnings("unchecked")
     public List<Node> findChildNodesWithXPath(String xpathString) {
-        // return new BaseXPath(xpathString, new DocumentNavigator()).selectNodes(this);
         return new ArrayList<Node>();
     }
 

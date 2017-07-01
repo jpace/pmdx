@@ -5,27 +5,13 @@
 
 package net.sourceforge.pmd.lang.java.ast;
 
-import net.sourceforge.pmd.Rule;
-
-public class ASTTypeDeclaration extends AbstractJavaTypeNode implements CanSuppressWarnings {
+public class ASTTypeDeclaration extends AbstractJavaTypeNode {
     public ASTTypeDeclaration(int id) {
         super(id);
     }
 
     public ASTTypeDeclaration(JavaParser p, int id) {
         super(p, id);
-    }
-
-    public boolean hasSuppressWarningsAnnotationFor(Rule rule) {
-        for (int i = 0; i < jjtGetNumChildren(); i++) {
-            if (jjtGetChild(i) instanceof ASTAnnotation) {
-                ASTAnnotation a = (ASTAnnotation) jjtGetChild(i);
-                if (a.suppresses(rule)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**

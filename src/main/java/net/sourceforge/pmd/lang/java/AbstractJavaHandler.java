@@ -7,28 +7,13 @@ package net.sourceforge.pmd.lang.java;
 import java.io.Writer;
 
 import net.sourceforge.pmd.lang.AbstractLanguageVersionHandler;
-import net.sourceforge.pmd.lang.DataFlowHandler;
-import net.sourceforge.pmd.lang.LanguageRegistry;
 import net.sourceforge.pmd.lang.VisitorStarter;
-import net.sourceforge.pmd.lang.XPathHandler;
 import net.sourceforge.pmd.lang.ast.Node;
-import net.sourceforge.pmd.lang.ast.xpath.AbstractASTXPathHandler;
-import net.sourceforge.pmd.lang.dfa.DFAGraphRule;
 import net.sourceforge.pmd.lang.java.ast.ASTCompilationUnit;
 import net.sourceforge.pmd.lang.java.ast.DumpFacade;
 import net.sourceforge.pmd.lang.java.ast.JavaNode;
-import net.sourceforge.pmd.lang.java.dfa.DataFlowFacade;
-import net.sourceforge.pmd.lang.java.dfa.JavaDFAGraphRule;
-import net.sourceforge.pmd.lang.java.oom.MetricsVisitorFacade;
-import net.sourceforge.pmd.lang.java.rule.JavaRuleViolationFactory;
 import net.sourceforge.pmd.lang.java.symboltable.SymbolFacade;
 import net.sourceforge.pmd.lang.java.typeresolution.TypeResolutionFacade;
-import net.sourceforge.pmd.lang.java.xpath.GetCommentOnFunction;
-import net.sourceforge.pmd.lang.java.xpath.JavaFunctions;
-import net.sourceforge.pmd.lang.java.xpath.TypeOfFunction;
-import net.sourceforge.pmd.lang.rule.RuleViolationFactory;
-
-import net.sf.saxon.sxpath.IndependentContext;
 
 /**
  * Implementation of LanguageVersionHandler for the Java AST. It uses anonymous
@@ -37,38 +22,6 @@ import net.sf.saxon.sxpath.IndependentContext;
  * @author pieter_van_raemdonck - Application Engineers NV/SA - www.ae.be
  */
 public abstract class AbstractJavaHandler extends AbstractLanguageVersionHandler {
-
-    @Override
-    public DataFlowHandler getDataFlowHandler() {
-        return new JavaDataFlowHandler();
-    }
-
-    @Override
-    public XPathHandler getXPathHandler() {
-        return new AbstractASTXPathHandler() {
-            public void initialize() {
-                TypeOfFunction.registerSelfInSimpleContext();
-                GetCommentOnFunction.registerSelfInSimpleContext();
-            }
-
-            public void initialize(IndependentContext context) {
-                super.initialize(context, LanguageRegistry.getLanguage(JavaLanguageModule.NAME), JavaFunctions.class);
-            }
-        };
-    }
-
-    public RuleViolationFactory getRuleViolationFactory() {
-        return JavaRuleViolationFactory.INSTANCE;
-    }
-
-    @Override
-    public VisitorStarter getDataFlowFacade() {
-        return new VisitorStarter() {
-            public void start(Node rootNode) {
-                new DataFlowFacade().initializeWith(getDataFlowHandler(), (ASTCompilationUnit) rootNode);
-            }
-        };
-    }
 
     @Override
     public VisitorStarter getSymbolFacade() {
@@ -98,26 +51,11 @@ public abstract class AbstractJavaHandler extends AbstractLanguageVersionHandler
     }
 
     @Override
-    public VisitorStarter getMetricsVisitorFacade() {
-        return new VisitorStarter() {
-            @Override
-            public void start(Node rootNode) {
-                new MetricsVisitorFacade().initializeWith((ASTCompilationUnit) rootNode);
-            }
-        };
-    }
-
-    @Override
     public VisitorStarter getDumpFacade(final Writer writer, final String prefix, final boolean recurse) {
         return new VisitorStarter() {
             public void start(Node rootNode) {
                 new DumpFacade().initializeWith(writer, prefix, recurse, (JavaNode) rootNode);
             }
         };
-    }
-
-    @Override
-    public DFAGraphRule getDFAGraphRule() {
-        return new JavaDFAGraphRule();
     }
 }

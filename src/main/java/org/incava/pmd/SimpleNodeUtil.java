@@ -16,14 +16,22 @@ public class SimpleNodeUtil {
      * Returns the token images for the node.
      */
     public static String toString(Node node) {
-        Token tk = node.getFirstToken();
-        Token last = node.getLastToken();
+        Token tk = getFirstToken(node);
+        Token last = getLastToken(node);
         StringBuilder sb = new StringBuilder(tk.image);
         while (tk != last) {
             tk = tk.next;
             sb.append(tk.image);
         }
         return sb.toString();
+    }
+
+    public static Token getFirstToken(Node node) {
+        return node.jjtGetFirstToken();
+    }
+
+    public static Token getLastToken(Node node) {
+        return node.jjtGetLastToken();
     }
 
     /**
@@ -54,14 +62,14 @@ public class SimpleNodeUtil {
         List<Object> list = new ArrayList<Object>();
         
         Token t = new Token();
-        t.next = node.getFirstToken();
+        t.next = getFirstToken(node);
         
         int nChildren = node.jjtGetNumChildren();
         for (int ord = 0; ord < nChildren; ++ord) {
             Node n = (Node)node.jjtGetChild(ord);
             while (true) {
                 t = t.next;
-                if (t == n.getFirstToken()) {
+                if (t == getFirstToken(n)) {
                     break;
                 }
                 if (getTokens) {
@@ -71,10 +79,10 @@ public class SimpleNodeUtil {
             if (getNodes) {
                 list.add(n);
             }
-            t = n.getLastToken();
+            t = getLastToken(n);
         }
 
-        while (t != node.getLastToken()) {
+        while (t != getLastToken(node)) {
             t = t.next;
             if (getTokens) {
                 list.add(t);
@@ -129,8 +137,8 @@ public class SimpleNodeUtil {
     public static List<Token> getChildTokens(Node node) {
         List<Token> children = new ArrayList<Token>();
         
-        Token tk = node.getFirstToken();
-        Token lastTk = node.getLastToken();
+        Token tk = getFirstToken(node);
+        Token lastTk = getLastToken(node);
         
         while (tk != null) {
             children.add(tk);
@@ -184,14 +192,14 @@ public class SimpleNodeUtil {
     public static List<Token> getTokens(Node node) {
         List<Token> tokens = new ArrayList<Token>();
         Token tk = new Token();
-        tk.next = node.getFirstToken();
+        tk.next = getFirstToken(node);
 
         if (tk != null) {
             tokens.add(tk);
             do {
                 tk = tk.next;
                 tokens.add(tk);
-            } while (tk != node.getLastToken());
+            } while (tk != getLastToken(node));
         }
         return tokens;
     }
@@ -227,11 +235,11 @@ public class SimpleNodeUtil {
         Node n = (Node)node.jjtGetChild(0);
 
         Token t = new Token();
-        t.next = node.getFirstToken();
+        t.next = getFirstToken(node);
             
         while (true) {
             t = t.next;
-            if (t == n.getFirstToken()) {
+            if (t == getFirstToken(n)) {
                 break;
             }
             else if (t.kind == tokenType) {
@@ -255,11 +263,11 @@ public class SimpleNodeUtil {
         Node n = (Node)node.jjtGetChild(0);
 
         Token t = new Token();
-        t.next = node.getFirstToken();
+        t.next = getFirstToken(node);
             
         while (true) {
             t = t.next;
-            if (t == n.getFirstToken()) {
+            if (t == getFirstToken(n)) {
                 break;
             }
             else {
@@ -275,8 +283,8 @@ public class SimpleNodeUtil {
     }
 
     public static void print(Node node, String prefix) {
-        Token first = node.getFirstToken();
-        Token last  = node.getLastToken();
+        Token first = getFirstToken(node);
+        Token last  = getLastToken(node);
         tr.Ace.log(prefix + node.toString() + ":" + TokenUtil.getLocation(first, last));
     }
 

@@ -6,9 +6,6 @@ package net.sourceforge.pmd.lang;
 
 import java.io.Writer;
 
-import net.sourceforge.pmd.lang.dfa.DFAGraphRule;
-import net.sourceforge.pmd.lang.rule.RuleViolationFactory;
-
 /**
  * Interface for obtaining the classes necessary for checking source files of a
  * specific language.
@@ -21,16 +18,6 @@ public interface LanguageVersionHandler {
      * Get the DataFlowHandler.
      */
     DataFlowHandler getDataFlowHandler();
-
-    /**
-     * Get the XPathHandler.
-     */
-    XPathHandler getXPathHandler();
-
-    /**
-     * Get the RuleViolationFactory.
-     */
-    RuleViolationFactory getRuleViolationFactory();
 
     /**
      * Get the default ParserOptions.
@@ -94,6 +81,4 @@ public interface LanguageVersionHandler {
      * @return VisitorStarter
      */
     VisitorStarter getDumpFacade(Writer writer, String prefix, boolean recurse);
-
-    DFAGraphRule getDFAGraphRule();
 }

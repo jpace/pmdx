@@ -7,8 +7,6 @@ package net.sourceforge.pmd.lang.ast;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sourceforge.pmd.PMD;
-
 public abstract class AbstractTokenManager {
 
     // Because the TokenMgrError class does not have access to the TokenManager
@@ -16,8 +14,11 @@ public abstract class AbstractTokenManager {
     // cannot store the file name as an instance field, but must use a static.
     private static ThreadLocal<String> fileName = new ThreadLocal<>();
 
+    /** The default suppress marker string. */
+    public static final String SUPPRESS_MARKER = "NOPMD";    
+
     protected Map<Integer, String> suppressMap = new HashMap<>();
-    protected String suppressMarker = PMD.SUPPRESS_MARKER;
+    protected String suppressMarker = SUPPRESS_MARKER;
 
     public static void setFileName(String fileName) {
         AbstractTokenManager.fileName.set(fileName);

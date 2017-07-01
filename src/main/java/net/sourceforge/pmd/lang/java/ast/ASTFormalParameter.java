@@ -5,9 +5,7 @@
 
 package net.sourceforge.pmd.lang.java.ast;
 
-import net.sourceforge.pmd.Rule;
-
-public class ASTFormalParameter extends AbstractJavaAccessNode implements Dimensionable, CanSuppressWarnings {
+public class ASTFormalParameter extends AbstractJavaAccessNode implements Dimensionable {
 
     private boolean isVarargs;
 
@@ -34,19 +32,6 @@ public class ASTFormalParameter extends AbstractJavaAccessNode implements Dimens
     @Override
     public Object jjtAccept(JavaParserVisitor visitor, Object data) {
         return visitor.visit(this, data);
-    }
-
-    @Override
-    public boolean hasSuppressWarningsAnnotationFor(Rule rule) {
-        for (int i = 0; i < jjtGetNumChildren(); i++) {
-            if (jjtGetChild(i) instanceof ASTAnnotation) {
-                ASTAnnotation a = (ASTAnnotation) jjtGetChild(i);
-                if (a.suppresses(rule)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     @Override
