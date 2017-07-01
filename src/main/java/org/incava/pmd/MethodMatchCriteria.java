@@ -1,7 +1,7 @@
 package org.incava.pmdx;
 
-import net.sourceforge.pmd.ast.ASTFormalParameters;
-import net.sourceforge.pmd.ast.ASTMethodDeclaration;
+import net.sourceforge.pmd.lang.java.ast.ASTFormalParameters;
+import net.sourceforge.pmd.lang.java.ast.ASTMethodDeclaration;
 
 /**
  * A criterion (some criteria) for matching nodes.

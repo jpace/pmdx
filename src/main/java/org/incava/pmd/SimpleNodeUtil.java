@@ -2,9 +2,9 @@ package org.incava.pmdx;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.sourceforge.pmd.ast.JavaParserConstants;
-import net.sourceforge.pmd.ast.SimpleNode;
-import net.sourceforge.pmd.ast.Token;
+import net.sourceforge.pmd.lang.java.ast.JavaParserConstants;
+import net.sourceforge.pmd.lang.java.ast.SimpleNode;
+import net.sourceforge.pmd.lang.java.ast.Token;
 import static org.incava.ijdk.util.IUtil.*;
 
 /**

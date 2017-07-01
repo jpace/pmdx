@@ -1,10 +1,10 @@
 package org.incava.pmdx;
 
 import java.util.List;
-import net.sourceforge.pmd.ast.ASTClassOrInterfaceDeclaration;
-import net.sourceforge.pmd.ast.ASTTypeDeclaration;
-import net.sourceforge.pmd.ast.SimpleNode;
-import net.sourceforge.pmd.ast.Token;
+import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceDeclaration;
+import net.sourceforge.pmd.lang.java.ast.ASTTypeDeclaration;
+import net.sourceforge.pmd.lang.java.ast.SimpleNode;
+import net.sourceforge.pmd.lang.java.ast.Token;
 
 /**
  * Miscellaneous routines for type declarations.

@@ -2,9 +2,9 @@ package org.incava.pmdx;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.sourceforge.pmd.ast.ASTVariableDeclarator;
-import net.sourceforge.pmd.ast.ASTVariableDeclaratorId;
-import net.sourceforge.pmd.ast.Token;
+import net.sourceforge.pmd.lang.java.ast.ASTVariableDeclarator;
+import net.sourceforge.pmd.lang.java.ast.ASTVariableDeclaratorId;
+import net.sourceforge.pmd.lang.java.ast.Token;
 
 /**
  * Miscellaneous routines for variables (declarators).

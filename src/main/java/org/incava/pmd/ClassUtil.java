@@ -1,8 +1,8 @@
 package org.incava.pmdx;
 
-import net.sourceforge.pmd.ast.ASTClassOrInterfaceDeclaration;
-import net.sourceforge.pmd.ast.JavaParserConstants;
-import net.sourceforge.pmd.ast.Token;
+import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceDeclaration;
+import net.sourceforge.pmd.lang.java.ast.JavaParserConstants;
+import net.sourceforge.pmd.lang.java.ast.Token;
 
 /**
  * Miscellaneous routines for classes.

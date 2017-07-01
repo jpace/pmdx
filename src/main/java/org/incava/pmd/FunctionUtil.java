@@ -2,11 +2,11 @@ package org.incava.pmdx;
 
 import java.util.Iterator;
 import java.util.List;
-import net.sourceforge.pmd.ast.ASTFormalParameters;
-import net.sourceforge.pmd.ast.ASTNameList;
-import net.sourceforge.pmd.ast.JavaParserConstants;
-import net.sourceforge.pmd.ast.SimpleNode;
-import net.sourceforge.pmd.ast.Token;
+import net.sourceforge.pmd.lang.java.ast.ASTFormalParameters;
+import net.sourceforge.pmd.lang.java.ast.ASTNameList;
+import net.sourceforge.pmd.lang.java.ast.JavaParserConstants;
+import net.sourceforge.pmd.lang.java.ast.SimpleNode;
+import net.sourceforge.pmd.lang.java.ast.Token;
 import org.incava.ijdk.lang.StringExt;
 
 /**

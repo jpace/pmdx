@@ -1,6 +1,6 @@
 package org.incava.pmdx;
 
-import net.sourceforge.pmd.ast.Token;
+import net.sourceforge.pmd.lang.java.ast.Token;
 import static org.incava.ijdk.util.IUtil.*;
 
 /**

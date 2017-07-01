@@ -1,8 +1,8 @@
 package org.incava.pmdx;
 
 import java.util.List;
-import net.sourceforge.pmd.ast.ASTName;
-import net.sourceforge.pmd.ast.ASTNameList;
+import net.sourceforge.pmd.lang.java.ast.ASTName;
+import net.sourceforge.pmd.lang.java.ast.ASTNameList;
 
 /**
  * Miscellaneous routines for throws lists.
