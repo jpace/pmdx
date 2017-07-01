@@ -7,7 +7,6 @@ package net.sourceforge.pmd.lang.ast;
 
 import java.util.List;
 
-import org.jaxen.JaxenException;
 import org.w3c.dom.Document;
 
 import net.sourceforge.pmd.lang.dfa.DataFlowNode;
@@ -175,7 +174,7 @@ public interface Node {
      * @return List of all matching nodes. Returns an empty list if none found.
      * @throws JaxenException
      */
-    List<? extends Node> findChildNodesWithXPath(String xpathString) throws JaxenException;
+    List<? extends Node> findChildNodesWithXPath(String xpathString);
 
     /**
      * Checks whether at least one descendant matches the xpath expression.

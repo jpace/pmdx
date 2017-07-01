@@ -12,8 +12,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.jaxen.BaseXPath;
-import org.jaxen.JaxenException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -413,8 +411,9 @@ public abstract class AbstractNode implements Node {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public List<Node> findChildNodesWithXPath(String xpathString) throws JaxenException {
-        return new BaseXPath(xpathString, new DocumentNavigator()).selectNodes(this);
+    public List<Node> findChildNodesWithXPath(String xpathString) {
+        // return new BaseXPath(xpathString, new DocumentNavigator()).selectNodes(this);
+        return new ArrayList<Node>();
     }
 
     /**
@@ -422,11 +421,7 @@ public abstract class AbstractNode implements Node {
      */
     @Override
     public boolean hasDescendantMatchingXPath(String xpathString) {
-        try {
-            return !findChildNodesWithXPath(xpathString).isEmpty();
-        } catch (JaxenException e) {
-            throw new RuntimeException("XPath expression " + xpathString + " failed: " + e.getLocalizedMessage(), e);
-        }
+        return false;
     }
 
     /**
