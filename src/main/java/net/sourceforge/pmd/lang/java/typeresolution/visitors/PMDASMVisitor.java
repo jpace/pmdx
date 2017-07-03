@@ -11,16 +11,13 @@ import java.util.Map;
 
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.signature.SignatureReader;
 import org.objectweb.asm.signature.SignatureVisitor;
 
-public class PMDASMVisitor extends ClassVisitor {
+public class PMDASMVisitor {
 
     private String outerName;
 
@@ -101,29 +98,6 @@ public class PMDASMVisitor extends ClassVisitor {
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
         addType(Type.getType(desc));
         return annotationVisitor;
-    }
-
-    @Override
-    public FieldVisitor visitField(int access, String name, String desc, String sig, Object value) {
-        if (sig != null) {
-            extractSignature(sig);
-        }
-
-        addType(Type.getType(desc));
-        if (value instanceof Type) {
-            addType((Type) value);
-        }
-        return fieldVisitor;
-    }
-
-    @Override
-    public MethodVisitor visitMethod(int access, String name, String desc, String sig, String[] exceptions) {
-        if (sig != null) {
-            extractSignature(sig);
-        }
-        addMethodDesc(desc);
-        parseClassName(exceptions);
-        return methodVisitor;
     }
 
     @Override

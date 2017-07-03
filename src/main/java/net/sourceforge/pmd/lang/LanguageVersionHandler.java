@@ -15,11 +15,6 @@ import java.io.Writer;
 public interface LanguageVersionHandler {
 
     /**
-     * Get the DataFlowHandler.
-     */
-    DataFlowHandler getDataFlowHandler();
-
-    /**
      * Get the default ParserOptions.
      *
      * @return ParserOptions
@@ -32,13 +27,6 @@ public interface LanguageVersionHandler {
      * @return Parser
      */
     Parser getParser(ParserOptions parserOptions);
-
-    /**
-     * Get the DataFlowFacade.
-     *
-     * @return VisitorStarter
-     */
-    VisitorStarter getDataFlowFacade();
 
     /**
      * Get the SymbolFacade.
@@ -55,15 +43,6 @@ public interface LanguageVersionHandler {
      * @return VisitorStarter
      */
     VisitorStarter getSymbolFacade(ClassLoader classLoader);
-
-    /**
-     * Get the TypeResolutionFacade.
-     *
-     * @param classLoader
-     *            A ClassLoader to use for resolving Types.
-     * @return VisitorStarter
-     */
-    VisitorStarter getTypeResolutionFacade(ClassLoader classLoader);
 
     /**
      * Get the Metrics Framework visitor.

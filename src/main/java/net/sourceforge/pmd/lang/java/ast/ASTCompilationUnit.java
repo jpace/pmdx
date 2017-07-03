@@ -9,12 +9,10 @@ import java.util.List;
 
 import net.sourceforge.pmd.lang.ast.Node;
 import net.sourceforge.pmd.lang.ast.RootNode;
-import net.sourceforge.pmd.lang.java.typeresolution.ClassTypeResolver;
 
 // FUTURE Change this class to extend from SimpleJavaNode, as TypeNode is not appropriate (unless I'm wrong)
 public class ASTCompilationUnit extends AbstractJavaTypeNode implements RootNode {
 
-    private ClassTypeResolver classTypeResolver;
     private List<Comment> comments;
 
     public ASTCompilationUnit(int id) {
@@ -51,13 +49,5 @@ public class ASTCompilationUnit extends AbstractJavaTypeNode implements RootNode
             return n instanceof ASTPackageDeclaration ? (ASTPackageDeclaration) n : null;
         }
         return null;
-    }
-
-    public ClassTypeResolver getClassTypeResolver() {
-        return classTypeResolver;
-    }
-
-    public void setClassTypeResolver(ClassTypeResolver classTypeResolver) {
-        this.classTypeResolver = classTypeResolver;
     }
 }

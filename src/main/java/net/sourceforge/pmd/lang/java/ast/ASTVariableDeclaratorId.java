@@ -8,13 +8,11 @@ package net.sourceforge.pmd.lang.java.ast;
 import java.util.List;
 
 import net.sourceforge.pmd.lang.ast.Node;
-import net.sourceforge.pmd.lang.java.symboltable.VariableNameDeclaration;
 import net.sourceforge.pmd.lang.symboltable.NameOccurrence;
 
 public class ASTVariableDeclaratorId extends AbstractJavaTypeNode {
 
     private int arrayDepth;
-    private VariableNameDeclaration nameDeclaration;
     private boolean explicitReceiverParameter = false;
 
     public ASTVariableDeclaratorId(int id) {
@@ -31,18 +29,6 @@ public class ASTVariableDeclaratorId extends AbstractJavaTypeNode {
     @Override
     public Object jjtAccept(JavaParserVisitor visitor, Object data) {
         return visitor.visit(this, data);
-    }
-
-    public VariableNameDeclaration getNameDeclaration() {
-        return nameDeclaration;
-    }
-
-    public void setNameDeclaration(VariableNameDeclaration decl) {
-        nameDeclaration = decl;
-    }
-
-    public List<NameOccurrence> getUsages() {
-        return getScope().getDeclarations(VariableNameDeclaration.class).get(nameDeclaration);
     }
 
     public void bumpArrayDepth() {

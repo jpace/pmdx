@@ -14,17 +14,11 @@ import net.sourceforge.pmd.lang.java.ast.AccessNode;
 import net.sourceforge.pmd.lang.java.ast.Dimensionable;
 import net.sourceforge.pmd.lang.java.ast.TypeNode;
 import net.sourceforge.pmd.lang.symboltable.AbstractNameDeclaration;
-import net.sourceforge.pmd.lang.symboltable.Scope;
 
 public class VariableNameDeclaration extends AbstractNameDeclaration implements TypedNameDeclaration {
 
     public VariableNameDeclaration(ASTVariableDeclaratorId node) {
         super(node);
-    }
-
-    @Override
-    public Scope getScope() {
-        return node.getScope().getEnclosingScope(ClassScope.class);
     }
 
     public boolean isArray() {
