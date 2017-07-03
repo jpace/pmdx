@@ -31,11 +31,6 @@ public abstract class AbstractJavaHandler extends AbstractLanguageVersionHandler
     }
 
     @Override
-    public VisitorStarter getTypeResolutionFacade(final ClassLoader classLoader) {
-        return null;
-    }
-
-    @Override
     public VisitorStarter getDumpFacade(final Writer writer, final String prefix, final boolean recurse) {
         return null;
     }

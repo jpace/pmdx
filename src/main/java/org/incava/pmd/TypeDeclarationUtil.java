@@ -12,7 +12,7 @@ import net.sourceforge.pmd.lang.java.ast.Token;
 public class TypeDeclarationUtil extends SimpleNodeUtil {
     public static Token getName(ASTTypeDeclaration typeDecl) {
         ASTClassOrInterfaceDeclaration cidecl = findChild(typeDecl, ASTClassOrInterfaceDeclaration.class);
-        return cidecl == null ? null : cidecl.getFirstToken().next;
+        return cidecl == null ? null : getFirstToken(cidecl).next;
     }
 
     public static ASTClassOrInterfaceDeclaration getType(ASTTypeDeclaration typeDecl) {

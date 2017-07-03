@@ -12,7 +12,7 @@ import net.sourceforge.pmd.lang.java.ast.Token;
 public class VariableUtil extends SimpleNodeUtil {
     public static Token getName(ASTVariableDeclarator vd) {
         ASTVariableDeclaratorId vid = findChild(vd, ASTVariableDeclaratorId.class);
-        return vid.getFirstToken();
+        return getFirstToken(vid);
     }
 
     public static List<Token> getVariableNames(List<ASTVariableDeclarator> vds) {

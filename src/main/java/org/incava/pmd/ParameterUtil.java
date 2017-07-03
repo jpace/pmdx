@@ -63,7 +63,7 @@ public class ParameterUtil extends SimpleNodeUtil {
         }
         else {
             ASTVariableDeclaratorId vid = (ASTVariableDeclaratorId)param.jjtGetChild(1);
-            return vid.getFirstToken();
+            return getFirstToken(vid);
         }
     }
 
@@ -76,11 +76,11 @@ public class ParameterUtil extends SimpleNodeUtil {
             // variable ID including brackets, for arrays
             StringBuffer typeBuf = new StringBuffer();
             ASTType      type    = findChild(param, ASTType.class);
-            Token        ttk     = type.getFirstToken();
+            Token        ttk     = getFirstToken(type);
         
             while (true) {
                 typeBuf.append(ttk.image);
-                if (ttk == type.getLastToken()) {
+                if (ttk == getLastToken(type)) {
                     break;
                 }
                 else {
@@ -90,8 +90,8 @@ public class ParameterUtil extends SimpleNodeUtil {
             
             ASTVariableDeclaratorId vid = findChild(param, ASTVariableDeclaratorId.class);
             
-            Token vtk = vid.getFirstToken();
-            while (vtk != vid.getLastToken()) {
+            Token vtk = getFirstToken(vid);
+            while (vtk != getLastToken(vid)) {
                 vtk = vtk.next;
                 typeBuf.append(vtk.image);
             }

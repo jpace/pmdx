@@ -29,11 +29,6 @@ public abstract class AbstractLanguageVersionHandler implements LanguageVersionH
     }
 
     @Override
-    public VisitorStarter getTypeResolutionFacade(ClassLoader classLoader) {
-        return VisitorStarter.DUMMY;
-    }
-
-    @Override
     public VisitorStarter getMetricsVisitorFacade() {
         return VisitorStarter.DUMMY;
     }

@@ -17,7 +17,7 @@ import org.incava.ijdk.util.CollectionExt;
 public class FieldUtil extends SimpleNodeUtil {
     public static Token getName(ASTVariableDeclarator vd) {
         ASTVariableDeclaratorId vid = findChild(vd, ASTVariableDeclaratorId.class);
-        return vid.getFirstToken();
+        return getFirstToken(vid);
     }
 
     public static List<ASTVariableDeclarator> getVariableDeclarators(ASTFieldDeclaration fld) {

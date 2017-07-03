@@ -1,6 +1,6 @@
 package org.incava.pmdx;
 
-import net.sourceforge.pmd.lang.ast.Node;
+import net.sourceforge.pmd.lang.java.ast.AbstractJavaNode;
 import net.sourceforge.pmd.lang.java.ast.JavaParserConstants;
 import net.sourceforge.pmd.lang.java.ast.Token;
 
@@ -17,7 +17,7 @@ public class ItemUtil extends SimpleNodeUtil {
     /**
      * Returns the access type, as a string. "package" is the default.
      */
-    public static String getAccessString(Node node) {
+    public static String getAccessString(AbstractJavaNode node) {
         Token tk = getAccess(node);
         return tk == null ? "package" : tk.image;
     }
@@ -25,7 +25,7 @@ public class ItemUtil extends SimpleNodeUtil {
     /**
      * Returns the access type, as a token.
      */
-    public static Token getAccess(Node node) {
+    public static Token getAccess(AbstractJavaNode node) {
         for (int ai = 0; ai < ACCESSES.length; ++ai) {
             int   acc = ACCESSES[ai];
             Token tk  = getLeadingToken(node, acc);

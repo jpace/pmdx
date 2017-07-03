@@ -13,8 +13,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sourceforge.pmd.util.StringUtil;
-
 public final class CommentUtil {
 
     private static final String CR = "\n";
@@ -47,7 +45,7 @@ public final class CommentUtil {
             return null;
         }
 
-        if (StringUtil.isNotEmpty(text.substring(position, endPos))) {
+        if (isNotEmpty(text.substring(position, endPos))) {
             return text.substring(position, endPos).trim();
         }
 
@@ -58,7 +56,7 @@ public final class CommentUtil {
         // try next line
         int nextEndPos = text.indexOf('\n', endPos + 1);
 
-        if (StringUtil.isNotEmpty(text.substring(endPos, nextEndPos))) {
+        if (isNotEmpty(text.substring(endPos, nextEndPos))) {
             return text.substring(endPos, nextEndPos).trim();
         }
 
@@ -136,7 +134,7 @@ public final class CommentUtil {
 
         int firstNonEmpty = 0;
         for (; firstNonEmpty < lines.size(); firstNonEmpty++) {
-            if (StringUtil.isNotEmpty(lines.get(firstNonEmpty))) {
+            if (isNotEmpty(lines.get(firstNonEmpty))) {
                 break;
             }
         }
@@ -148,7 +146,7 @@ public final class CommentUtil {
 
         int lastNonEmpty = lines.size() - 1;
         for (; lastNonEmpty > 0; lastNonEmpty--) {
-            if (StringUtil.isNotEmpty(lines.get(lastNonEmpty))) {
+            if (isNotEmpty(lines.get(lastNonEmpty))) {
                 break;
             }
         }
@@ -160,6 +158,41 @@ public final class CommentUtil {
 
         return filtered;
     }
+
+
+    /**
+     * Returns true if the value arg is either null, empty, or full of
+     * whitespace characters. More efficient that calling
+     * (string).trim().length() == 0
+     *
+     * @param value
+     * @return <code>true</code> if the value is empty, <code>false</code>
+     *         otherwise.
+     */
+    public static boolean isEmpty(String value) {
+
+        if (value == null || "".equals(value)) {
+            return true;
+        }
+
+        for (int i = 0; i < value.length(); i++) {
+            if (!Character.isWhitespace(value.charAt(i))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     *
+     * @param value
+     *            String
+     * @return boolean
+     */
+    public static boolean isNotEmpty(String value) {
+        return !isEmpty(value);
+    }    
 
     public static void main(String[] args) {
 

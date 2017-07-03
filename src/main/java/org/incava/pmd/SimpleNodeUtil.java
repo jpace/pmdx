@@ -2,20 +2,21 @@ package org.incava.pmdx;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.sourceforge.pmd.lang.ast.Node;
+import net.sourceforge.pmd.lang.ast.GenericToken;
+import net.sourceforge.pmd.lang.java.ast.AbstractJavaNode;
 import net.sourceforge.pmd.lang.java.ast.JavaParserConstants;
 import net.sourceforge.pmd.lang.java.ast.Token;
 
 import static org.incava.ijdk.util.IUtil.*;
 
 /**
- * Miscellaneous functions for Node.
+ * Miscellaneous functions for AbstractJavaNode.
  */
 public class SimpleNodeUtil {
     /**
      * Returns the token images for the node.
      */
-    public static String toString(Node node) {
+    public static String toString(AbstractJavaNode node) {
         Token tk = getFirstToken(node);
         Token last = getLastToken(node);
         StringBuilder sb = new StringBuilder(tk.image);
@@ -26,39 +27,39 @@ public class SimpleNodeUtil {
         return sb.toString();
     }
 
-    public static Token getFirstToken(Node node) {
-        return node.jjtGetFirstToken();
+    public static Token getFirstToken(AbstractJavaNode node) {
+        return (Token)node.jjtGetFirstToken();
     }
 
-    public static Token getLastToken(Node node) {
-        return node.jjtGetLastToken();
+    public static Token getLastToken(AbstractJavaNode node) {
+        return (Token)node.jjtGetLastToken();
     }
 
     /**
      * Returns whether the node has any children.
      */
-    public static boolean hasChildren(Node node) {
+    public static boolean hasChildren(AbstractJavaNode node) {
         return node.jjtGetNumChildren() > 0;
     }
 
     /**
      * Returns the parent node.
      */
-    public static Node getParent(Node node) {
-        return (Node)node.jjtGetParent();
+    public static AbstractJavaNode getParent(AbstractJavaNode node) {
+        return (AbstractJavaNode)node.jjtGetParent();
     }
 
     /**
      * Returns a list of children, both nodes and tokens.
      */
-    public static List<Object> getChildren(Node node) {
+    public static List<Object> getChildren(AbstractJavaNode node) {
         return getChildren(node, true, true);
     }
 
     /**
      * Returns a list of children, optionally nodes and tokens.
      */
-    public static List<Object> getChildren(Node node, boolean getNodes, boolean getTokens) {
+    public static List<Object> getChildren(AbstractJavaNode node, boolean getNodes, boolean getTokens) {
         List<Object> list = new ArrayList<Object>();
         
         Token t = new Token();
@@ -66,7 +67,7 @@ public class SimpleNodeUtil {
         
         int nChildren = node.jjtGetNumChildren();
         for (int ord = 0; ord < nChildren; ++ord) {
-            Node n = (Node)node.jjtGetChild(ord);
+            AbstractJavaNode n = (AbstractJavaNode)node.jjtGetChild(ord);
             while (true) {
                 t = t.next;
                 if (t == getFirstToken(n)) {
@@ -92,16 +93,16 @@ public class SimpleNodeUtil {
         return list;
     }
 
-    public static Node findChild(Node parent) {
+    public static AbstractJavaNode findChild(AbstractJavaNode parent) {
         return findChild(parent, null);
     }
 
-    public static <NodeType extends Node> NodeType findChild(Node parent, Class<NodeType> childType) {
+    public static <NodeType extends AbstractJavaNode> NodeType findChild(AbstractJavaNode parent, Class<NodeType> childType) {
         return findChild(parent, childType, 0);
     }
 
     @SuppressWarnings("unchecked")
-    public static <NodeType extends Node> NodeType findChild(Node parent, Class<NodeType> childType, int index) {
+    public static <NodeType extends AbstractJavaNode> NodeType findChild(AbstractJavaNode parent, Class<NodeType> childType, int index) {
         if (index < 0 || isNull(parent)) {
             return null;
         }
@@ -113,7 +114,7 @@ public class SimpleNodeUtil {
 
         int nFound = -1;
         for (int idx = 0; idx < nChildren; ++idx) {
-            Node child = getChildOfType(parent, childType, idx);
+            AbstractJavaNode child = getChildOfType(parent, childType, idx);
             if (isNotNull(child) && ++nFound == index) {
                 return (NodeType)child;
             }
@@ -126,15 +127,15 @@ public class SimpleNodeUtil {
      * given class type. If the given one is null, the child will match.
      */
     @SuppressWarnings("unchecked")
-    private static <NodeType extends Node> NodeType getChildOfType(Node parent, Class<NodeType> childType, int index) {
-        Node child = (Node)parent.jjtGetChild(index);
+    private static <NodeType extends AbstractJavaNode> NodeType getChildOfType(AbstractJavaNode parent, Class<NodeType> childType, int index) {
+        AbstractJavaNode child = (AbstractJavaNode)parent.jjtGetChild(index);
         return isNull(childType) || child.getClass().equals(childType) ? (NodeType)child : null;
     }
 
     /**
      * Returns a list of child tokens, non-hierarchically.
      */
-    public static List<Token> getChildTokens(Node node) {
+    public static List<Token> getChildTokens(AbstractJavaNode node) {
         List<Token> children = new ArrayList<Token>();
         
         Token tk = getFirstToken(node);
@@ -152,11 +153,11 @@ public class SimpleNodeUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static <NodeType extends Node> List<NodeType> findChildren(Node parent, Class<NodeType> childType) {
+    public static <NodeType extends AbstractJavaNode> List<NodeType> findChildren(AbstractJavaNode parent, Class<NodeType> childType) {
         List<NodeType> list = new ArrayList<NodeType>();
         int nChildren = parent == null ? 0 : parent.jjtGetNumChildren();
         for (int i = 0; i < nChildren; ++i) {
-            Node child = (Node)parent.jjtGetChild(i);
+            AbstractJavaNode child = (AbstractJavaNode)parent.jjtGetChild(i);
             if (childType == null || child.getClass().equals(childType)) {
                 list.add((NodeType)child);
             }
@@ -165,18 +166,18 @@ public class SimpleNodeUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static <NodeType extends Node> List<NodeType> findChildren(Node parent) {
+    public static <NodeType extends AbstractJavaNode> List<NodeType> findChildren(AbstractJavaNode parent) {
         return findChildren(parent, null);
     }
 
     /**
      * @todo remove -- this doesn't seem to be used.
      */
-    public static List<Node> findDescendants(Node parent, Class<?> childType) {
-        List<Node> kids = new ArrayList<Node>();
+    public static List<AbstractJavaNode> findDescendants(AbstractJavaNode parent, Class<?> childType) {
+        List<AbstractJavaNode> kids = new ArrayList<AbstractJavaNode>();
         int nChildren = parent == null ? 0 : parent.jjtGetNumChildren();
         for (int i = 0; i < nChildren; ++i) {
-            Node child = (Node)parent.jjtGetChild(i);
+            AbstractJavaNode child = (AbstractJavaNode)parent.jjtGetChild(i);
             if (childType == null || child.getClass().equals(childType)) {
                 kids.add(child);
             }
@@ -189,7 +190,7 @@ public class SimpleNodeUtil {
     /**
      * Returns the tokens for a node.
      */
-    public static List<Token> getTokens(Node node) {
+    public static List<Token> getTokens(AbstractJavaNode node) {
         List<Token> tokens = new ArrayList<Token>();
         Token tk = new Token();
         tk.next = getFirstToken(node);
@@ -204,7 +205,7 @@ public class SimpleNodeUtil {
         return tokens;
     }
 
-    public static Token findToken(Node node, int tokenType) {
+    public static Token findToken(AbstractJavaNode node, int tokenType) {
         List<Object> childTokens = getChildren(node, false, true);
         for (Object obj : childTokens) {
             Token tk = (Token)obj;
@@ -219,7 +220,7 @@ public class SimpleNodeUtil {
      * Returns whether the node has a matching token, occurring prior to any
      * non-tokens (i.e., before any child nodes).
      */
-    public static boolean hasLeadingToken(Node node, int tokenType) {
+    public static boolean hasLeadingToken(AbstractJavaNode node, int tokenType) {
         return getLeadingToken(node, tokenType) != null;
     }
 
@@ -227,12 +228,12 @@ public class SimpleNodeUtil {
      * Returns the matching token, occurring prior to any non-tokens (i.e.,
      * before any child nodes).
      */
-    public static Token getLeadingToken(Node node, int tokenType) {
+    public static Token getLeadingToken(AbstractJavaNode node, int tokenType) {
         if (node.jjtGetNumChildren() == 0) {
             return null;
         }
 
-        Node n = (Node)node.jjtGetChild(0);
+        AbstractJavaNode n = (AbstractJavaNode)node.jjtGetChild(0);
 
         Token t = new Token();
         t.next = getFirstToken(node);
@@ -253,14 +254,14 @@ public class SimpleNodeUtil {
     /**
      * Returns the tokens preceding the first child of the node.
      */
-    public static List<Token> getLeadingTokens(Node node) {
+    public static List<Token> getLeadingTokens(AbstractJavaNode node) {
         List<Token> list = new ArrayList<Token>();
         
         if (node.jjtGetNumChildren() == 0) {
             return list;
         }
 
-        Node n = (Node)node.jjtGetChild(0);
+        AbstractJavaNode n = (AbstractJavaNode)node.jjtGetChild(0);
 
         Token t = new Token();
         t.next = getFirstToken(node);
@@ -278,25 +279,25 @@ public class SimpleNodeUtil {
         return list;
     }
 
-    public static void print(Node node) {
+    public static void print(AbstractJavaNode node) {
         print(node, "");
     }
 
-    public static void print(Node node, String prefix) {
+    public static void print(AbstractJavaNode node, String prefix) {
         Token first = getFirstToken(node);
         Token last  = getLastToken(node);
         tr.Ace.log(prefix + node.toString() + ":" + TokenUtil.getLocation(first, last));
     }
 
-    public static void dump(Node node) {
+    public static void dump(AbstractJavaNode node) {
         dump(node, "", false);
     }
 
-    public static void dump(Node node, String prefix) {
+    public static void dump(AbstractJavaNode node, String prefix) {
         dump(node, prefix, false);
     }
 
-    public static void dump(Node node, String prefix, boolean showWhitespace) {
+    public static void dump(AbstractJavaNode node, String prefix, boolean showWhitespace) {
         print(node, prefix);
 
         List<Object> children = getChildren(node);
@@ -314,7 +315,7 @@ public class SimpleNodeUtil {
             tr.Ace.log(prefix + "    \"" + tk + "\" " + TokenUtil.getLocation(tk, tk) + " (" + tk.kind + ")");
         }
         else {
-            Node sn = (Node)obj;
+            AbstractJavaNode sn = (AbstractJavaNode)obj;
             dump(sn, prefix + "    ", showWhitespace);
         }
     }
@@ -323,7 +324,7 @@ public class SimpleNodeUtil {
      * Returns a numeric "level" for the node. Zero is public or abstract, one
      * is protected, two is package, and three is private.
      */
-    public static int getLevel(Node node) {
+    public static int getLevel(AbstractJavaNode node) {
         List<Token> tokens = getLeadingTokens(node);
         for (Token t : tokens) {
             switch (t.kind) {

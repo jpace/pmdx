@@ -24,7 +24,7 @@ public class MethodUtil extends FunctionUtil {
     
     public static Token getName(ASTMethodDeclaration method) {
         ASTMethodDeclarator decl = getDeclarator(method);
-        return decl.getFirstToken();
+        return getFirstToken(decl);
     }
 
     public static ASTFormalParameters getParameters(ASTMethodDeclaration method) {
