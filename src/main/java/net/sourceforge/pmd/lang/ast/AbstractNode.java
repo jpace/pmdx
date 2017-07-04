@@ -198,6 +198,7 @@ public abstract class AbstractNode implements Node {
      * @return Node of type parentType. Returns null if none found.
      */
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T getFirstParentOfType(Class<T> parentType) {
         Node parentNode = jjtGetParent();
         while (parentNode != null && parentNode.getClass() != parentType) {
@@ -215,6 +216,7 @@ public abstract class AbstractNode implements Node {
      * @return List of parentType instances found.
      */
     @Override
+    @SuppressWarnings("unchecked")
     public <T> List<T> getParentsOfType(Class<T> parentType) {
         List<T> parents = new ArrayList<>();
         Node parentNode = jjtGetParent();
@@ -245,6 +247,7 @@ public abstract class AbstractNode implements Node {
         findDescendantsOfType(this, targetType, results, crossBoundaries);
     }
 
+    @SuppressWarnings("unchecked")
     private static <T> void findDescendantsOfType(Node node, Class<T> targetType, List<T> results,
             boolean crossFindBoundaries) {
 
@@ -267,6 +270,7 @@ public abstract class AbstractNode implements Node {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("unchecked")
     public <T> List<T> findChildrenOfType(Class<T> targetType) {
         List<T> list = new ArrayList<>();
         int n = jjtGetNumChildren();
@@ -296,6 +300,7 @@ public abstract class AbstractNode implements Node {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T getFirstChildOfType(Class<T> childType) {
         int n = jjtGetNumChildren();
         for (int i = 0; i < n; i++) {
@@ -307,6 +312,7 @@ public abstract class AbstractNode implements Node {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     private static <T> T getFirstDescendantOfType(Class<T> descendantType, Node node) {
         int n = node.jjtGetNumChildren();
         for (int i = 0; i < n; i++) {

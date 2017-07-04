@@ -102,34 +102,24 @@ public class SimpleNodeUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static <NodeType extends AbstractJavaNode> NodeType findChild(AbstractJavaNode parent, Class<NodeType> childType, int index) {
-        if (index < 0 || isNull(parent)) {
+    public static <NodeType extends AbstractJavaNode> NodeType findChild(AbstractJavaNode parent, Class<NodeType> childType, int nth) {
+        if (nth < 0 || isNull(parent)) {
             return null;
         }
 
         int nChildren = parent.jjtGetNumChildren();
-        if (index >= nChildren) {
+        if (nth >= nChildren) {
             return null;
         }
 
         int nFound = -1;
         for (int idx = 0; idx < nChildren; ++idx) {
             AbstractJavaNode child = getChildOfType(parent, childType, idx);
-            if (isNotNull(child) && ++nFound == index) {
+            if (isNotNull(child) && ++nFound == nth) {
                 return (NodeType)child;
             }
         }
         return null;
-    }
-
-    /**
-     * Returns the node if the class of the child at the given index matches the
-     * given class type. If the given one is null, the child will match.
-     */
-    @SuppressWarnings("unchecked")
-    private static <NodeType extends AbstractJavaNode> NodeType getChildOfType(AbstractJavaNode parent, Class<NodeType> childType, int index) {
-        AbstractJavaNode child = (AbstractJavaNode)parent.jjtGetChild(index);
-        return isNull(childType) || child.getClass().equals(childType) ? (NodeType)child : null;
     }
 
     /**
@@ -168,23 +158,6 @@ public class SimpleNodeUtil {
     @SuppressWarnings("unchecked")
     public static <NodeType extends AbstractJavaNode> List<NodeType> findChildren(AbstractJavaNode parent) {
         return findChildren(parent, null);
-    }
-
-    /**
-     * @todo remove -- this doesn't seem to be used.
-     */
-    public static List<AbstractJavaNode> findDescendants(AbstractJavaNode parent, Class<?> childType) {
-        List<AbstractJavaNode> kids = new ArrayList<AbstractJavaNode>();
-        int nChildren = parent == null ? 0 : parent.jjtGetNumChildren();
-        for (int i = 0; i < nChildren; ++i) {
-            AbstractJavaNode child = (AbstractJavaNode)parent.jjtGetChild(i);
-            if (childType == null || child.getClass().equals(childType)) {
-                kids.add(child);
-            }
-            kids.addAll(findDescendants(child, childType));
-        }
-
-        return kids;
     }
 
     /**
@@ -321,8 +294,8 @@ public class SimpleNodeUtil {
     }
 
     /**
-     * Returns a numeric "level" for the node. Zero is public or abstract, one
-     * is protected, two is package, and three is private.
+     * Returns a numeric "level" for the node. Zero is public or abstract, one is protected, two is
+     * package, and three is private.
      */
     public static int getLevel(AbstractJavaNode node) {
         List<Token> tokens = getLeadingTokens(node);
@@ -346,4 +319,14 @@ public class SimpleNodeUtil {
     private static String getClassName(Class<?> cls) {
         return cls == null ? null : cls.getName();
     }
+
+    /**
+     * Returns the node if the class of the child at the given index matches the given class type.
+     * If the given one is null, the child will match.
+     */
+    @SuppressWarnings("unchecked")
+    private static <NodeType extends AbstractJavaNode> NodeType getChildOfType(AbstractJavaNode parent, Class<NodeType> childType, int index) {
+        AbstractJavaNode child = (AbstractJavaNode)parent.jjtGetChild(index);
+        return isNull(childType) || child.getClass().equals(childType) ? (NodeType)child : null;
+    }    
 }
