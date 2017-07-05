@@ -8,10 +8,12 @@ import junitparams.naming.TestCaseName;
 import net.sourceforge.pmd.lang.ast.JavaCharStream;
 import net.sourceforge.pmd.lang.ast.TokenMgrError;
 import net.sourceforge.pmd.lang.java.ast.ASTCompilationUnit;
+import net.sourceforge.pmd.lang.java.ast.ASTImportDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTPackageDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTTypeDeclaration;
 import net.sourceforge.pmd.lang.java.ast.AbstractJavaNode;
 import net.sourceforge.pmd.lang.java.ast.JavaParser;
+import net.sourceforge.pmd.lang.java.ast.JavaParserConstants;
 import net.sourceforge.pmd.lang.java.ast.ParseException;
 import net.sourceforge.pmd.lang.java.ast.Token;
 import org.incava.attest.Parameterized;
@@ -25,23 +27,11 @@ import static org.incava.attest.Assertions.message;
 import static org.incava.attest.ContextMatcher.withContext;
 
 public class SimpleNodeUtilTest extends Parameterized {
-    private static ASTCompilationUnit cu;
+    private static ASTCompilationUnit compUnit;
 
     @BeforeClass
     public static void setup() throws Exception {
-        tr.Ace.setVerbose(true);
-        
-        cu = compile("package abc;\nclass C1 {}");
-        tr.Ace.log("cu", cu);
-
-        Token tk = SimpleNodeUtil.getFirstToken(cu);
-
-        while (tk != null) {
-            tr.Ace.log("tk", tk);
-            tr.Ace.log("tk.kind", tk.kind);
-
-            tk = tk.next;
-        }
+        compUnit = compile("package abc;\nclass C1 {}");
     }
 
     private static ASTCompilationUnit compile(String str) throws Exception {
@@ -57,7 +47,7 @@ public class SimpleNodeUtilTest extends Parameterized {
     
     @Test
     public void getFirstToken() {
-        Token tk = SimpleNodeUtil.getFirstToken(cu);
+        Token tk = SimpleNodeUtil.getFirstToken(compUnit);
 
         assertThat(tk.toString(), equalTo("package"));
         assertThat(tk.kind, equalTo(43));
@@ -65,7 +55,7 @@ public class SimpleNodeUtilTest extends Parameterized {
     
     @Test
     public void getLastToken() {
-        Token tk = SimpleNodeUtil.getLastToken(cu);
+        Token tk = SimpleNodeUtil.getLastToken(compUnit);
 
         // a compilation unit has two EOFs?
 
@@ -75,19 +65,19 @@ public class SimpleNodeUtilTest extends Parameterized {
     
     @Test
     public void hasChildren() {
-        boolean result = SimpleNodeUtil.hasChildren(cu);
+        boolean result = SimpleNodeUtil.hasChildren(compUnit);
         assertThat(result, equalTo(true));
     }
     
     @Test
     public void getParent() {
-        AbstractJavaNode parent = SimpleNodeUtil.getParent(cu);
+        AbstractJavaNode parent = SimpleNodeUtil.getParent(compUnit);
         assertThat(parent, nullValue());
     }
     
     @Test
     public void getChildren() {
-        List<Object> children = SimpleNodeUtil.getChildren(cu);
+        List<Object> children = SimpleNodeUtil.getChildren(compUnit);
 
         assertThat(children, hasSize(3));
         assertThat(children.get(0), instanceOf(ASTPackageDeclaration.class));
@@ -97,7 +87,7 @@ public class SimpleNodeUtilTest extends Parameterized {
     
     @Test
     public void getChildrenNodes() {
-        List<Object> children = SimpleNodeUtil.getChildren(cu, true, false);
+        List<Object> children = SimpleNodeUtil.getChildren(compUnit, true, false);
 
         assertThat(children, hasSize(2));
         assertThat(children.get(0), instanceOf(ASTPackageDeclaration.class));
@@ -106,7 +96,7 @@ public class SimpleNodeUtilTest extends Parameterized {
     
     @Test
     public void getChildrenTokens() {
-        List<Object> children = SimpleNodeUtil.getChildren(cu, false, true);
+        List<Object> children = SimpleNodeUtil.getChildren(compUnit, false, true);
 
         assertThat(children, hasSize(1));
         assertThat(children.get(0), instanceOf(Token.class));        
@@ -114,7 +104,7 @@ public class SimpleNodeUtilTest extends Parameterized {
     
     @Test
     public void getChildrenNodesTokens() {
-        List<Object> children = SimpleNodeUtil.getChildren(cu, true, true);
+        List<Object> children = SimpleNodeUtil.getChildren(compUnit, true, true);
 
         assertThat(children, hasSize(3));
         assertThat(children.get(0), instanceOf(ASTPackageDeclaration.class));
@@ -124,37 +114,37 @@ public class SimpleNodeUtilTest extends Parameterized {
     
     @Test
     public void getChildrenNeither() {
-        List<Object> children = SimpleNodeUtil.getChildren(cu, false, false);
+        List<Object> children = SimpleNodeUtil.getChildren(compUnit, false, false);
         assertThat(children, empty());
     }    
     
     @Test
     public void findChildNoArgs() {
-        AbstractJavaNode child = SimpleNodeUtil.findChild(cu);
+        AbstractJavaNode child = SimpleNodeUtil.findChild(compUnit);
         assertThat(child, instanceOf(ASTPackageDeclaration.class));
     }    
     
     @Test
     public void findChildOfClass() {
-        AbstractJavaNode pkg = SimpleNodeUtil.findChild(cu, ASTPackageDeclaration.class);
+        AbstractJavaNode pkg = SimpleNodeUtil.findChild(compUnit, ASTPackageDeclaration.class);
         assertThat(pkg, instanceOf(ASTPackageDeclaration.class));
 
-        AbstractJavaNode type = SimpleNodeUtil.findChild(cu, ASTTypeDeclaration.class);
+        AbstractJavaNode type = SimpleNodeUtil.findChild(compUnit, ASTTypeDeclaration.class);
         assertThat(type, instanceOf(ASTTypeDeclaration.class));        
     }
     
     @Test
     public void findChildOfClassOfCount() {
-        AbstractJavaNode pkg0 = SimpleNodeUtil.findChild(cu, ASTPackageDeclaration.class, 0);
+        AbstractJavaNode pkg0 = SimpleNodeUtil.findChild(compUnit, ASTPackageDeclaration.class, 0);
         assertThat(pkg0, instanceOf(ASTPackageDeclaration.class));
 
-        AbstractJavaNode pkg1 = SimpleNodeUtil.findChild(cu, ASTPackageDeclaration.class, 1);
+        AbstractJavaNode pkg1 = SimpleNodeUtil.findChild(compUnit, ASTPackageDeclaration.class, 1);
         assertThat(pkg1, nullValue());
     }
     
     @Test
     public void getChildTokens() {
-        List<Token> tokens = SimpleNodeUtil.getChildTokens(cu);
+        List<Token> tokens = SimpleNodeUtil.getChildTokens(compUnit);
 
         assertThat(tokens, hasSize(8));
         assertThat(tokens.get(0), hasToString("package"));
@@ -168,4 +158,47 @@ public class SimpleNodeUtilTest extends Parameterized {
 
         // the second EOF is not included
     }
+
+    private <NodeType extends AbstractJavaNode> void assertFindChildren(int numExpected, ASTCompilationUnit cu, Class<NodeType> childType) {
+        List<NodeType> children = SimpleNodeUtil.findChildren(cu, childType);
+        assertThat(children, hasSize(numExpected));
+    }
+
+    @Test
+    public void findChildren() throws Exception {
+        ASTCompilationUnit cu = compile("package abc;\nclass C {}\nclass D {}");
+        tr.Ace.log("cu", cu);
+        tr.Ace.log("cu.children", SimpleNodeUtil.getChildren(cu, true, true));
+
+        assertFindChildren(1, cu, ASTPackageDeclaration.class);
+        assertFindChildren(2, cu, ASTTypeDeclaration.class);
+        assertFindChildren(0, cu, ASTImportDeclaration.class);
+    }
+
+    @Test
+    public void findToken() throws Exception {
+        ASTCompilationUnit cu = compile("package abc;\npublic class C {}");
+        AbstractJavaNode type = SimpleNodeUtil.findChild(cu, ASTTypeDeclaration.class);
+
+        Token pb = SimpleNodeUtil.findToken(type, JavaParserConstants.PUBLIC);
+        assertThat(pb, notNullValue());
+
+        Token abs = SimpleNodeUtil.findToken(type, JavaParserConstants.ABSTRACT);
+        assertThat(abs, nullValue());
+    }
+
+    @Test
+    public void getLeadingToken() throws Exception {
+        ASTCompilationUnit cu = compile("package abc;\npublic abstract class C {}");
+        AbstractJavaNode type = SimpleNodeUtil.findChild(cu, ASTTypeDeclaration.class);
+
+        Token pb = SimpleNodeUtil.getLeadingToken(type, JavaParserConstants.PUBLIC);
+        assertThat(pb, notNullValue());
+
+        Token abs = SimpleNodeUtil.getLeadingToken(type, JavaParserConstants.ABSTRACT);
+        assertThat(abs, notNullValue());
+
+        Token st = SimpleNodeUtil.findToken(type, JavaParserConstants.STATIC);
+        assertThat(st, nullValue());
+    }    
 }
