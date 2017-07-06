@@ -12,10 +12,14 @@ import static org.incava.ijdk.util.IUtil.*;
 /**
  * Miscellaneous functions for AbstractJavaNode.
  */
-public class Node {
-    private final AbstractJavaNode node;
+public class Node<ASTNode extends AbstractJavaNode> {
+    public static <ASTNode extends AbstractJavaNode> Node<ASTNode> of(ASTNode pn) {
+        return new Node<ASTNode>(pn);
+    }
+    
+    private final ASTNode node;
 
-    public Node(AbstractJavaNode node) {
+    public Node(ASTNode node) {
         this.node = node;
     }
     
@@ -74,7 +78,7 @@ public class Node {
         int nChildren = node.jjtGetNumChildren();
         for (int ord = 0; ord < nChildren; ++ord) {
             AbstractJavaNode n = (AbstractJavaNode)node.jjtGetChild(ord);
-            Node nn = new Node(n);
+            Node<AbstractJavaNode> nn = new Node<AbstractJavaNode>(n);
             while (true) {
                 t = t.next;
                 if (t == nn.getFirstToken()) {
@@ -173,14 +177,14 @@ public class Node {
 
     // apparently unused (by DiffJ)
     // @SuppressWarnings("unchecked")
-    // public static <NodeType extends AbstractJavaNode> List<NodeType> findChildren(AbstractJavaNode parent) {
+    // public static <NodeType extends ASTNode> List<NodeType> findChildren(ASTNode parent) {
     //     return findChildren(parent, null);
     // }
 
     // /**
     //  * Returns the tokens for a node.
     //  */
-    // public static List<Token> getTokens(AbstractJavaNode node) {
+    // public static List<Token> getTokens(ASTNode node) {
     //     List<Token> tokens = new ArrayList<Token>();
     //     Token tk = new Token();
     //     tk.next = getFirstToken(node);
@@ -229,7 +233,7 @@ public class Node {
             
         while (true) {
             t = t.next;
-            Node nn = new Node(n);
+            Node<AbstractJavaNode> nn = new Node<AbstractJavaNode>(n);
             if (t == nn.getFirstToken()) {
                 break;
             }
@@ -258,7 +262,7 @@ public class Node {
             
         while (true) {
             t = t.next;
-            Node nn = new Node(n);
+            Node<AbstractJavaNode> nn = new Node<AbstractJavaNode>(n);
             if (t == nn.getFirstToken()) {
                 break;
             }
@@ -307,7 +311,7 @@ public class Node {
         }
         else {
             AbstractJavaNode sn = (AbstractJavaNode)obj;
-            Node nn = new Node(sn);
+            Node<AbstractJavaNode> nn = new Node<AbstractJavaNode>(sn);
             nn.dump(prefix + "    ", showWhitespace);
         }
     }
@@ -347,5 +351,9 @@ public class Node {
     private <NodeType extends AbstractJavaNode> NodeType getChildOfType(Class<NodeType> childType, int index) {
         AbstractJavaNode child = (AbstractJavaNode)node.jjtGetChild(index);
         return isNull(childType) || child.getClass().equals(childType) ? (NodeType)child : null;
-    }    
+    }
+
+    protected ASTNode astNode() {
+        return node;
+    }
 }

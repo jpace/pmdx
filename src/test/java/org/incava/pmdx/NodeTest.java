@@ -14,7 +14,6 @@ import net.sourceforge.pmd.lang.java.ast.ASTTypeDeclaration;
 import net.sourceforge.pmd.lang.java.ast.AbstractJavaNode;
 import net.sourceforge.pmd.lang.java.ast.JavaParser;
 import net.sourceforge.pmd.lang.java.ast.JavaParserConstants;
-import net.sourceforge.pmd.lang.java.ast.ParseException;
 import net.sourceforge.pmd.lang.java.ast.Token;
 import org.incava.attest.Parameterized;
 import org.junit.BeforeClass;
@@ -22,18 +21,15 @@ import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.incava.attest.Assertions.assertEqual;
 import static org.incava.attest.Assertions.message;
 import static org.incava.attest.ContextMatcher.withContext;
 
 public class NodeTest extends Parameterized {
-    private static ASTCompilationUnit compUnit;
-    private static Node node;
+    private static Node<ASTCompilationUnit> node;
 
     @BeforeClass
     public static void setup() throws Exception {
-        compUnit = compile("package abc;\nclass C1 {}");
-        node = new Node(compUnit);
+        node = Node.of(compile("package abc;\nclass C1 {}"));
     }
 
     private static ASTCompilationUnit compile(String str) throws Exception {
@@ -162,7 +158,7 @@ public class NodeTest extends Parameterized {
     }
 
     private <NodeType extends AbstractJavaNode> void assertFindChildren(int numExpected, ASTCompilationUnit cu, Class<NodeType> childType) {
-        Node n = new Node(cu);
+        Node<AbstractJavaNode> n = Node.of(cu);
         List<NodeType> children = n.findChildren(childType);
         assertThat(children, hasSize(numExpected));
     }
@@ -178,7 +174,7 @@ public class NodeTest extends Parameterized {
     @Test
     public void findToken() throws Exception {
         ASTCompilationUnit cu = compile("package abc;\npublic class C {}");
-        AbstractJavaNode type = new Node(cu).findChild(ASTTypeDeclaration.class);
+        AbstractJavaNode type = Node.of(cu).findChild(ASTTypeDeclaration.class);
 
         Token pb = SimpleNodeUtil.findToken(type, JavaParserConstants.PUBLIC);
         assertThat(pb, notNullValue());
@@ -190,8 +186,8 @@ public class NodeTest extends Parameterized {
     @Test
     public void getLeadingToken() throws Exception {
         ASTCompilationUnit cu = compile("package abc;\npublic abstract class C {}");
-        AbstractJavaNode type = new Node(cu).findChild(ASTTypeDeclaration.class);
-        Node n = new Node(type);
+        AbstractJavaNode type = Node.of(cu).findChild(ASTTypeDeclaration.class);
+        Node<AbstractJavaNode> n = Node.of(type);
 
         Token pb = n.getLeadingToken(JavaParserConstants.PUBLIC);
         assertThat(pb, notNullValue());
