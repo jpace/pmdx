@@ -151,9 +151,7 @@ public class SimpleNodeUtilTest extends Parameterized {
     @Test
     public void findChildren() throws Exception {
         ASTCompilationUnit cu = compile("package abc;\nclass C {}\nclass D {}");
-        tr.Ace.log("cu", cu);
-        tr.Ace.log("cu.children", SimpleNodeUtil.getChildren(cu, true, true));
-
+        
         assertFindChildren(1, cu, ASTPackageDeclaration.class);
         assertFindChildren(2, cu, ASTTypeDeclaration.class);
         assertFindChildren(0, cu, ASTImportDeclaration.class);

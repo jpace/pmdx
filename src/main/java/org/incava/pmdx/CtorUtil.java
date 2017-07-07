@@ -11,7 +11,7 @@ import net.sourceforge.pmd.lang.java.ast.Token;
 public class CtorUtil extends FunctionUtil {
     public static Token getName(ASTConstructorDeclaration ctor) {
         return SimpleNodeUtil.findToken(ctor, JavaParserConstants.IDENTIFIER);
-   }
+    }
 
     public static ASTFormalParameters getParameters(ASTConstructorDeclaration ctor) {
         return findChild(ctor, ASTFormalParameters.class);

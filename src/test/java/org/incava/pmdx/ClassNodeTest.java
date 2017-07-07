@@ -55,6 +55,5 @@ public class ClassNodeTest extends Parameterized {
             params(1.0, "class C {}", "class C {}"),
             params(0.0, "class C {}", "class D {}")
                           );
-    }
-    
+    }    
 }
