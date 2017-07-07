@@ -21,7 +21,7 @@ import static org.incava.attest.Assertions.message;
 import static org.incava.attest.ContextMatcher.withContext;
 
 public class CompilationUnitTest extends Parameterized {
-    private static ASTCompilationUnit compile(String str) {
+    public static ASTCompilationUnit compile(String str) {
         try {
             Reader reader = new StringReader(str);
             JavaCharStream jcs = new JavaCharStream(reader);

@@ -1,18 +1,13 @@
 package org.incava.pmdx;
 
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.List;
 import junitparams.Parameters;
 import junitparams.naming.TestCaseName;
-import net.sourceforge.pmd.lang.ast.JavaCharStream;
-import net.sourceforge.pmd.lang.ast.TokenMgrError;
 import net.sourceforge.pmd.lang.java.ast.ASTCompilationUnit;
 import net.sourceforge.pmd.lang.java.ast.ASTImportDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTPackageDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTTypeDeclaration;
 import net.sourceforge.pmd.lang.java.ast.AbstractJavaNode;
-import net.sourceforge.pmd.lang.java.ast.JavaParser;
 import net.sourceforge.pmd.lang.java.ast.JavaParserConstants;
 import net.sourceforge.pmd.lang.java.ast.Token;
 import org.incava.attest.Parameterized;
@@ -23,24 +18,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.incava.attest.Assertions.message;
 import static org.incava.attest.ContextMatcher.withContext;
+import static org.incava.pmdx.CompilationUnitTest.compile;
 
 public class NodeTest extends Parameterized {
     private static Node<ASTCompilationUnit> node;
 
     @BeforeClass
-    public static void setup() throws Exception {
+    public static void setup() {
         node = Node.of(compile("package abc;\nclass C1 {}"));
-    }
-
-    private static ASTCompilationUnit compile(String str) throws Exception {
-        Reader reader = new StringReader(str);
-        JavaCharStream jcs = new JavaCharStream(reader);
-        JavaParser parser = new JavaParser(jcs);
-
-        // 1.6:
-        parser.setJdkVersion(6);
-
-        return parser.CompilationUnit();
     }
     
     @Test
