@@ -21,7 +21,7 @@ public class ClassNode extends Node<ASTClassOrInterfaceDeclaration> {
     }
 
     public double getMatchScore(ClassNode other) {
-        return getName().equals(other.getName()) ? 1.0 : 0.0;
+        return match(other).score();
     }
 
     public Match match(ClassNode other) {
