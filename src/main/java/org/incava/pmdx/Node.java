@@ -6,8 +6,7 @@ import net.sourceforge.pmd.lang.ast.GenericToken;
 import net.sourceforge.pmd.lang.java.ast.AbstractJavaNode;
 import net.sourceforge.pmd.lang.java.ast.JavaParserConstants;
 import net.sourceforge.pmd.lang.java.ast.Token;
-
-import static org.incava.ijdk.util.IUtil.*;
+import org.incava.ijdk.collect.IntegerList;
 
 /**
  * Miscellaneous functions for AbstractJavaNode.
@@ -123,7 +122,7 @@ public class Node<ASTNode extends AbstractJavaNode> {
      */
     @SuppressWarnings("unchecked")
     public <NodeType extends AbstractJavaNode> NodeType findChild(Class<NodeType> childType, int nth) {
-        if (nth < 0 || isNull(node)) {
+        if (nth < 0 || node == null) {
             return null;
         }
 
@@ -135,7 +134,7 @@ public class Node<ASTNode extends AbstractJavaNode> {
         int nFound = -1;
         for (int idx = 0; idx < nChildren; ++idx) {
             AbstractJavaNode child = getChildOfType(childType, idx);
-            if (isNotNull(child) && ++nFound == nth) {
+            if (child != null && ++nFound == nth) {
                 return (NodeType)child;
             }
         }
@@ -219,7 +218,8 @@ public class Node<ASTNode extends AbstractJavaNode> {
     }
 
     /**
-     * Returns the matching token, occurring prior to any non-tokens (i.e., before any child nodes).
+     * Returns the token of the given type, occurring prior to any non-tokens (i.e., before any
+     * child nodes).
      */
     public Token getLeadingToken(int tokenType) {
         if (node.jjtGetNumChildren() == 0) {
@@ -230,10 +230,10 @@ public class Node<ASTNode extends AbstractJavaNode> {
 
         Token t = new Token();
         t.next = getFirstToken();
-            
+        
         while (true) {
             t = t.next;
-            Node<AbstractJavaNode> nn = new Node<AbstractJavaNode>(n);
+            Node<AbstractJavaNode> nn = Node.of(n);
             if (t == nn.getFirstToken()) {
                 break;
             }
@@ -262,7 +262,7 @@ public class Node<ASTNode extends AbstractJavaNode> {
             
         while (true) {
             t = t.next;
-            Node<AbstractJavaNode> nn = new Node<AbstractJavaNode>(n);
+            Node<AbstractJavaNode> nn = Node.of(n);
             if (t == nn.getFirstToken()) {
                 break;
             }
@@ -339,6 +339,23 @@ public class Node<ASTNode extends AbstractJavaNode> {
         return 2;
     }
 
+    protected static final IntegerList ACCESSES = new IntegerList(JavaParserConstants.PUBLIC,
+                                                                  JavaParserConstants.PROTECTED,
+                                                                  JavaParserConstants.PRIVATE);
+    
+    /**
+     * Returns the access type, as a token.
+     */
+    public Token getAccess() {
+        for (Integer access : ACCESSES) {
+            Token tk  = getLeadingToken(access);
+            if (tk != null) {
+                return tk;
+            }
+        }
+        return null;
+    }    
+
     private String getClassName(Class<?> cls) {
         return cls == null ? null : cls.getName();
     }
@@ -350,7 +367,7 @@ public class Node<ASTNode extends AbstractJavaNode> {
     @SuppressWarnings("unchecked")
     private <NodeType extends AbstractJavaNode> NodeType getChildOfType(Class<NodeType> childType, int index) {
         AbstractJavaNode child = (AbstractJavaNode)node.jjtGetChild(index);
-        return isNull(childType) || child.getClass().equals(childType) ? (NodeType)child : null;
+        return childType == null || child.getClass().equals(childType) ? (NodeType)child : null;
     }
 
     protected ASTNode astNode() {

@@ -182,5 +182,23 @@ public class NodeTest extends Parameterized {
 
         Token st = n.findToken(JavaParserConstants.STATIC);
         assertThat(st, nullValue());
-    }    
+    }
+
+    @Test @Parameters @TestCaseName("{method} {index} {params}")
+    public void getAccess(int expected, String str) {
+        ASTCompilationUnit cu = compile(str);
+        AbstractJavaNode type = Node.of(cu).findChild(ASTTypeDeclaration.class);
+        Node<AbstractJavaNode> n = Node.of(type);
+        
+        Token access = n.getAccess();
+        assertThat(access.kind, withContext(message("str", str, "access", access), equalTo(expected)));
+    }
+    
+    private List<Object[]> parametersForGetAccess() {
+        return paramsList(
+            params(JavaParserConstants.PUBLIC, "public abstract class C {}"),
+            params(JavaParserConstants.PROTECTED, "protected abstract class C {}"),
+            params(JavaParserConstants.PRIVATE, "private abstract class C {}")
+                          );
+    }
 }
