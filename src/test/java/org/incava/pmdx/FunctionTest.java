@@ -8,9 +8,11 @@ import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceBodyDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTCompilationUnit;
 import net.sourceforge.pmd.lang.java.ast.ASTConstructorDeclaration;
+import net.sourceforge.pmd.lang.java.ast.ASTNameList;
 import net.sourceforge.pmd.lang.java.ast.ASTTypeDeclaration;
 import net.sourceforge.pmd.lang.java.ast.Token;
 import org.incava.attest.Parameterized;
+import org.incava.ijdk.collect.StringList;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -45,6 +47,20 @@ public class FunctionTest extends Parameterized {
         return paramsList(
             params(false, "public class C { public C() { } }"),
             params(true,  "public class C { public C() throws Ex { } }")
+                          );
+    }
+
+    @Test @Parameters @TestCaseName("{method} {index} {params}")
+    public void getThrowsList(boolean expected, String str) {
+        Function cn = getFirst(str);
+        ASTNameList names = cn.getThrowsList();
+        assertThat(names != null, withContext(message("str", str), equalTo(expected)));
+    }
+    
+    private List<Object[]> parametersForGetThrowsList() {
+        return paramsList(
+            params(false,  "public class C { public C() { } }"),
+            params(true,   "public class C { public C() throws Ex { } }")
                           );
     }
 }

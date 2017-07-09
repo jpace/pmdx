@@ -3,6 +3,7 @@ package org.incava.pmdx;
 import java.util.Iterator;
 import java.util.List;
 import net.sourceforge.pmd.lang.java.ast.ASTFormalParameters;
+import net.sourceforge.pmd.lang.java.ast.ASTName;
 import net.sourceforge.pmd.lang.java.ast.ASTNameList;
 import net.sourceforge.pmd.lang.java.ast.AbstractJavaNode;
 import net.sourceforge.pmd.lang.java.ast.JavaParserConstants;
