@@ -15,4 +15,8 @@ public class NameList extends Node<ASTNameList> {
         ASTName name = findChild(ASTName.class, index);
         return name == null ? null : Node.of(name).toString();
     }
+
+    public ASTName getNameNode(int index) {
+        return findChild(ASTName.class, index);
+    }    
 }

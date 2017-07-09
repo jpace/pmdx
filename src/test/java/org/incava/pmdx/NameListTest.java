@@ -8,6 +8,7 @@ import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceBodyDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTCompilationUnit;
 import net.sourceforge.pmd.lang.java.ast.ASTConstructorDeclaration;
+import net.sourceforge.pmd.lang.java.ast.ASTName;
 import net.sourceforge.pmd.lang.java.ast.ASTNameList;
 import net.sourceforge.pmd.lang.java.ast.ASTTypeDeclaration;
 import net.sourceforge.pmd.lang.java.ast.Token;
@@ -55,5 +56,16 @@ public class NameListTest extends Parameterized {
             params(StringList.of("Ex"),  "public class C { public C() throws Ex { } }"),
             params(StringList.of("Ex", "Fy"),  "public class C { public C() throws Ex, Fy { } }")
                           );
+    }
+
+    @Test @Parameters(method="parametersForGetName") @TestCaseName("{method} {index} {params}")
+    public void getNameNode(StringList expected, String str) {
+        NameList names = getFirst(str);
+        for (int idx = 0; idx < expected.size(); ++idx) {
+            ASTName name = names.getNameNode(idx);
+            assertThat(Node.of(name).toString(), withContext(message("str", str, "idx", idx), equalTo(expected.get(idx))));
+        }
+
+        assertThat(names.getName(expected.size()), nullValue());
     }
 }
