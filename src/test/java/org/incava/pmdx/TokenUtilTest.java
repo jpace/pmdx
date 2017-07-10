@@ -13,7 +13,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.incava.attest.Assertions.message;
 import static org.incava.attest.ContextMatcher.withContext;
-import static org.incava.pmdx.CompilationUnitTest.compile;
 
 public class TokenUtilTest extends Parameterized {
     public Function getFirst(String str) {

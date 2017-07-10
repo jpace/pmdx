@@ -18,4 +18,15 @@ public class Parameters extends Node<ASTFormalParameters> {
     public List<ASTFormalParameter> getParameters() {
         return findChildren(ASTFormalParameter.class);
     }
+
+    public List<String> getTypes() {
+        Array<String> types = Array.empty();
+        List<ASTFormalParameter> fps = getParameters();
+        for (ASTFormalParameter fp : fps) {
+            String type = new Parameter(fp).getType();
+            types.add(type);            
+        }
+        return types;
+    }
+    
 }

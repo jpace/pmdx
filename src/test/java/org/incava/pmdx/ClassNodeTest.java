@@ -3,8 +3,6 @@ package org.incava.pmdx;
 import java.util.List;
 import junitparams.Parameters;
 import junitparams.naming.TestCaseName;
-import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceDeclaration;
-import net.sourceforge.pmd.lang.java.ast.ASTCompilationUnit;
 import net.sourceforge.pmd.lang.java.ast.ASTTypeDeclaration;
 import org.incava.attest.Parameterized;
 import org.junit.Test;
@@ -13,17 +11,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.incava.attest.Assertions.message;
 import static org.incava.attest.ContextMatcher.withContext;
-import static org.incava.pmdx.CompilationUnitTest.compile;
 
 public class ClassNodeTest extends Parameterized {
     public ClassNode getFirst(String str) {
-        ASTCompilationUnit acu = compile(str);
-        CompilationUnit cu = new CompilationUnit(acu);
-        List<ASTTypeDeclaration> decls = cu.getTypeDeclarations();
-        
-        Node<ASTTypeDeclaration> typeDecl = Node.of(decls.get(0));
-        ASTClassOrInterfaceDeclaration coid = typeDecl.findChild(ASTClassOrInterfaceDeclaration.class);
-        return new ClassNode(coid);
+        TypeDecl td = new TypeDeclTest().getFirst(str);
+        return new ClassNode(td.getType());
     }
     
     @Test @Parameters @TestCaseName("{method} {index} {params}")

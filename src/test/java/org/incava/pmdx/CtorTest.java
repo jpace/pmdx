@@ -15,7 +15,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.incava.attest.Assertions.message;
 import static org.incava.attest.ContextMatcher.withContext;
-import static org.incava.pmdx.CompilationUnitTest.compile;
 
 public class CtorTest extends Parameterized {
     public Ctor getFirst(String str) {
@@ -38,6 +37,24 @@ public class CtorTest extends Parameterized {
         return paramsList(
             params("C", "class C { C() { } }"),
             params("D", "class D { D() { } }")
+                          );
+    }
+    
+    @Test @Parameters @TestCaseName("{method} {index} {params}")
+    public void getFullName(String expected, String str) {
+        String clsStr = "class C { " + str + " { } }";
+        Ctor cn = getFirst(clsStr);
+        String fn = cn.getFullName();
+        assertThat(fn, withContext(message("str", str), equalTo(expected)));
+    }
+    
+    private List<Object[]> parametersForGetFullName() {
+        return paramsList(
+            params("C()", "C()"),
+            params("C(int)", "C(int x)"),
+            params("C(char)", "C(char y)"),
+            params("C(int, char)", "C(int x, char y)"),
+            params("C(int[])", "C(int[] x)")
                           );
     }
 }
