@@ -4,7 +4,10 @@ import java.util.List;
 import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceBody;
 import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceBodyDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceDeclaration;
+import net.sourceforge.pmd.lang.java.ast.ASTConstructorDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTFieldDeclaration;
+import net.sourceforge.pmd.lang.java.ast.ASTMethodDeclaration;
+import net.sourceforge.pmd.lang.java.ast.AbstractJavaNode;
 import net.sourceforge.pmd.lang.java.ast.JavaParserConstants;
 import net.sourceforge.pmd.lang.java.ast.Token;
 import org.incava.ijdk.collect.Array;
@@ -34,28 +37,60 @@ public class ClassNode extends Node<ASTClassOrInterfaceDeclaration> {
     }
 
     public Field getField(int idx) {
-        ASTClassOrInterfaceBody body = findChild(ASTClassOrInterfaceBody.class);
-        List<ASTClassOrInterfaceBodyDeclaration> decls = Node.of(body).findChildren(ASTClassOrInterfaceBodyDeclaration.class);
-        int matched = -1;
-        for (ASTClassOrInterfaceBodyDeclaration decl : decls) {
-            ASTFieldDeclaration fd = Node.of(decl).findChild(ASTFieldDeclaration.class);
-            if (fd != null && ++matched == idx) {
-                return new Field(fd);
-            }
-        }
-        return null;
+        // inefficient
+        return getFields().get(idx);
     }
 
     public Array<Field> getFields() {
         Array<Field> fields = Array.empty();
-        ASTClassOrInterfaceBody body = findChild(ASTClassOrInterfaceBody.class);
-        List<ASTClassOrInterfaceBodyDeclaration> decls = Node.of(body).findChildren(ASTClassOrInterfaceBodyDeclaration.class);
-        for (ASTClassOrInterfaceBodyDeclaration decl : decls) {
-            ASTFieldDeclaration fd = Node.of(decl).findChild(ASTFieldDeclaration.class);
-            if (fd != null) {
-                fields.add(new Field(fd));
-            }
+        Array<ASTFieldDeclaration> fieldDecls = getAllOfType(ASTFieldDeclaration.class);
+        for (ASTFieldDeclaration fd : fieldDecls) {
+            fields.add(new Field(fd));
         }
         return fields;
     }
+
+    public Method getMethod(int idx) {
+        ASTClassOrInterfaceBody body = findChild(ASTClassOrInterfaceBody.class);
+        List<ASTClassOrInterfaceBodyDeclaration> decls = Node.of(body).findChildren(ASTClassOrInterfaceBodyDeclaration.class);
+        int matched = -1;
+        for (ASTClassOrInterfaceBodyDeclaration decl : decls) {
+            ASTMethodDeclaration d = Node.of(decl).findChild(ASTMethodDeclaration.class);
+            if (d != null && ++matched == idx) {
+                return new Method(d);
+            }
+        }
+        return null;
+    }    
+
+    public Array<Method> getMethods() {
+        Array<ASTMethodDeclaration> methodDecls = getAllOfType(ASTMethodDeclaration.class);
+        Array<Method> methods = Array.empty();
+        for (ASTMethodDeclaration md : methodDecls) {
+            methods.add(new Method(md));
+        }
+        return methods;
+    }
+
+    public Array<Ctor> getCtors() {
+        Array<ASTConstructorDeclaration> ctorDecls = getAllOfType(ASTConstructorDeclaration.class);
+        Array<Ctor> ctors = Array.empty();
+        for (ASTConstructorDeclaration d : ctorDecls) {
+            ctors.add(new Ctor(d));
+        }
+        return ctors;
+    }
+
+    protected <A extends AbstractJavaNode> Array<A> getAllOfType(Class<A> cls) {
+        Array<A> matching = Array.empty();
+        ASTClassOrInterfaceBody body = findChild(ASTClassOrInterfaceBody.class);
+        List<ASTClassOrInterfaceBodyDeclaration> decls = Node.of(body).findChildren(ASTClassOrInterfaceBodyDeclaration.class);
+        for (ASTClassOrInterfaceBodyDeclaration decl : decls) {
+            A d = Node.of(decl).findChild(cls);
+            if (d != null) {
+                matching.add(d);
+            }
+        }
+        return matching;
+    }    
 }

@@ -3,7 +3,6 @@ package org.incava.pmdx;
 import java.util.List;
 import junitparams.Parameters;
 import junitparams.naming.TestCaseName;
-import net.sourceforge.pmd.lang.java.ast.ASTTypeDeclaration;
 import org.incava.attest.Parameterized;
 import org.incava.ijdk.collect.Array;
 import org.junit.Test;
@@ -65,8 +64,8 @@ public class ClassNodeTest extends Parameterized {
             
             params(true,  "class C { int i; char j; }", 0),
             params(true,  "class C { int i; char j; }", 1),
-            params(true,  "class C { int i; a() { } char j; }", 1),
-            params(false, "class C { a() { } }", 0),
+            params(true,  "class C { int i; C() { } char j; }", 1),
+            params(false, "class C { C() { } }", 0),
             params(false, "class C { int i; char j; }", 2)
                           );
     }
@@ -83,8 +82,65 @@ public class ClassNodeTest extends Parameterized {
             params(1, "class C { int i; }"),
             params(0, "class C { }"),
             params(2, "class C { int i; char j; }"),
-            params(2,  "class C { int i; a() { } char j; }"),
-            params(0, "class C { a() { } }")
+            params(2, "class C { int i; C() { } char j; }"),
+            params(0, "class C { C() { } }")
+                          );
+    }
+
+    @Test @Parameters @TestCaseName("{method} {index} {params}")
+    public void getMethod(boolean expected, String str, int idx) {
+        ClassNode cn = getFirst(str);
+        Method result = cn.getMethod(idx);
+        assertThat(result != null, withContext(message("result", result, "str", str, "idx", idx), equalTo(expected)));
+    }
+    
+    private List<Object[]> parametersForGetMethod() {
+        return paramsList(
+            params(false, "class C { int i; }", 0),
+            params(false, "class C { }", 0),
+            params(true,  "class C { void a() { } }", 0),
+            params(false, "class C { void a() { } }", 1),
+            params(true,  "class C { int i; void a() { } }", 0),
+            params(false, "class C { int i; void a() { } }", 1),
+            params(true,  "class C { void a() { } char j; }", 0),
+            params(false, "class C { void a() { } char j; }", 1),
+            params(true,  "class C { void a() { } void b() { }; }", 0),
+            params(true,  "class C { void a() { } void b() { }; }", 1),
+            params(false, "class C { void a() { } void b() { }; }", 2)
+                          );
+    }
+
+    @Test @Parameters @TestCaseName("{method} {index} {params}")
+    public void getMethods(int expected, String str) {
+        ClassNode cn = getFirst(str);
+        Array<Method> result = cn.getMethods();
+        assertThat(result, withContext(message("result", result, "str", str), hasSize(expected)));
+    }
+    
+    private List<Object[]> parametersForGetMethods() {
+        return paramsList(
+            params(0, "class C { int i; }"),
+            params(0, "class C { }"),
+            params(1, "class C { void a() { } }"),
+            params(1, "class C { int i; void a() { } }"),
+            params(1, "class C { void a() { } char j; }"),
+            params(2, "class C { void a() { } void b() { }; }")
+                          );
+    }
+
+    @Test @Parameters @TestCaseName("{method} {index} {params}")
+    public void getCtors(int expected, String str) {
+        ClassNode cn = getFirst(str);
+        Array<Ctor> result = cn.getCtors();
+        assertThat(result, withContext(message("result", result, "str", str), hasSize(expected)));
+    }
+    
+    private List<Object[]> parametersForGetCtors() {
+        return paramsList(
+            params(1, "class C { C() { } }"),
+            params(0, "class C { }"),
+            params(1, "class C { C() { } void a() { } }"),
+            params(2, "class C { C() { } C(int i) { } }")
                           );
     }
 }
