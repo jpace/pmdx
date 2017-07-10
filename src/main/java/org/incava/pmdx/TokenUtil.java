@@ -1,7 +1,6 @@
 package org.incava.pmdx;
 
 import net.sourceforge.pmd.lang.java.ast.Token;
-import static org.incava.ijdk.util.IUtil.*;
 
 /**
  * Miscellaneous functions for Token.
@@ -19,11 +18,11 @@ public class TokenUtil {
         }
     }
 
-    protected static String getLocation(Token t1, Token t2) {
-        return "[" + t1.beginLine + ":" + t1.beginColumn + ":" + t2.endLine + ":" + t2.endColumn + "]";
+    public static String getLocation(Token t) {
+        return t.beginLine + ":" + t.beginColumn;
     }
 
-    private static String getClassName(Class<?> cls) {
-        return cls == null ? null : cls.getName();
+    public static String getLocation(Token t1, Token t2) {
+        return "[" + t1.beginLine + ":" + t1.beginColumn + ":" + t2.endLine + ":" + t2.endColumn + "]";
     }
 }
