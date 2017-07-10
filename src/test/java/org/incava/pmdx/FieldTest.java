@@ -3,10 +3,6 @@ package org.incava.pmdx;
 import java.util.List;
 import junitparams.Parameters;
 import junitparams.naming.TestCaseName;
-import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceBody;
-import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceBodyDeclaration;
-import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceDeclaration;
-import net.sourceforge.pmd.lang.java.ast.ASTFieldDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTType;
 import net.sourceforge.pmd.lang.java.ast.Token;
 import org.incava.attest.Parameterized;
@@ -21,11 +17,7 @@ import static org.incava.attest.ContextMatcher.withContext;
 public class FieldTest extends Parameterized {
     public Field getFirst(String str) {
         ClassNode cls = new ClassNodeTest().getFirst(str);
-        ASTClassOrInterfaceBody body = cls.findChild(ASTClassOrInterfaceBody.class);
-        ASTClassOrInterfaceBodyDeclaration decl = Node.of(body).findChild(ASTClassOrInterfaceBodyDeclaration.class);        
-        ASTFieldDeclaration field = Node.of(decl).findChild(ASTFieldDeclaration.class);
-        
-        return new Field(field);
+        return cls.getField(0);
     }
     
     @Test @Parameters @TestCaseName("{method} {index} {params}")
@@ -52,7 +44,7 @@ public class FieldTest extends Parameterized {
     
     private List<Object[]> parametersForGetNameList() {
         return paramsList(
-            params(StringList.of("x"),    "int x"),
+            params(StringList.of("x"),      "int x"),
             params(StringList.of("x", "y"), "int x, y"),
             params(StringList.of("x", "y"), "int x,    y")
                           );
@@ -70,14 +62,14 @@ public class FieldTest extends Parameterized {
     
     private List<Object[]> parametersForGetMatch() {
         return paramsList(
-            params(1.0,     "int f",    "int f"),
-            params(0.75,    "int f",    "int f, g"),
-            params(0.75,    "int f, g", "int f"),
-            params(2 / 3.0, "int f",    "int f, g, h"),
+            params(1.0,           "int f",    "int f"),
+            params(0.75,          "int f",    "int f, g"),
+            params(0.75,          "int f, g", "int f"),
+            params(2 / 3.0,       "int f",    "int f, g, h"),
             params(0.5 + 1 / 3.0, "int f, g", "int f, g, h"),
-            params(0.5,     "int f",    "char f"),
-            params(0.25,    "int f",    "char f, g"),
-            params(0,       "int f",    "char g")
+            params(0.5,           "int f",    "char f"),
+            params(0.25,          "int f",    "char f, g"),
+            params(0,             "int f",    "char g")
                           );
     }
     

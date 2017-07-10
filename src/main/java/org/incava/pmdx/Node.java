@@ -1,11 +1,10 @@
 package org.incava.pmdx;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.sourceforge.pmd.lang.ast.GenericToken;
 import net.sourceforge.pmd.lang.java.ast.AbstractJavaNode;
 import net.sourceforge.pmd.lang.java.ast.JavaParserConstants;
 import net.sourceforge.pmd.lang.java.ast.Token;
+import org.incava.ijdk.collect.Array;
 import org.incava.ijdk.collect.IntegerList;
 
 /**
@@ -61,15 +60,15 @@ public class Node<ASTNode extends AbstractJavaNode> {
     /**
      * Returns a list of children, both nodes and tokens.
      */
-    public List<Object> getChildren() {
+    public Array<Object> getChildren() {
         return getChildren(true, true);
     }
 
     /**
      * Returns a list of children, optionally nodes and tokens.
      */
-    public List<Object> getChildren(boolean getNodes, boolean getTokens) {
-        List<Object> list = new ArrayList<Object>();
+    public Array<Object> getChildren(boolean getNodes, boolean getTokens) {
+        Array<Object> list = Array.empty();
         
         Token t = new Token();
         t.next = getFirstToken();
@@ -144,8 +143,8 @@ public class Node<ASTNode extends AbstractJavaNode> {
     /**
      * Returns a list of child tokens, non-hierarchically.
      */
-    public List<Token> getChildTokens() {
-        List<Token> children = new ArrayList<Token>();
+    public Array<Token> getChildTokens() {
+        Array<Token> children = Array.empty();
         
         Token tk = getFirstToken();
         Token lastTk = getLastToken();
@@ -162,8 +161,8 @@ public class Node<ASTNode extends AbstractJavaNode> {
     }
 
     @SuppressWarnings("unchecked")
-    public <NodeType extends AbstractJavaNode> List<NodeType> findChildren(Class<NodeType> childType) {
-        List<NodeType> list = new ArrayList<NodeType>();
+    public <NodeType extends AbstractJavaNode> Array<NodeType> findChildren(Class<NodeType> childType) {
+        Array<NodeType> list = Array.empty();
         int nChildren = node == null ? 0 : node.jjtGetNumChildren();
         for (int i = 0; i < nChildren; ++i) {
             AbstractJavaNode child = (AbstractJavaNode)node.jjtGetChild(i);
@@ -199,7 +198,7 @@ public class Node<ASTNode extends AbstractJavaNode> {
     // }
 
     public Token findToken(int tokenType) {
-        List<Object> childTokens = getChildren(false, true);
+        Array<Object> childTokens = getChildren(false, true);
         for (Object obj : childTokens) {
             Token tk = (Token)obj;
             if (tk.kind == tokenType) {
@@ -248,8 +247,8 @@ public class Node<ASTNode extends AbstractJavaNode> {
     /**
      * Returns the tokens preceding the first child of the node.
      */
-    public List<Token> getLeadingTokens() {
-        List<Token> list = new ArrayList<Token>();
+    public Array<Token> getLeadingTokens() {
+        Array<Token> list = Array.empty();
         
         if (node.jjtGetNumChildren() == 0) {
             return list;
@@ -295,7 +294,7 @@ public class Node<ASTNode extends AbstractJavaNode> {
     public void dump(String prefix, boolean showWhitespace) {
         print(prefix);
 
-        List<Object> children = getChildren();
+        Array<Object> children = getChildren();
         for (Object obj : children) {
             dumpObject(obj, prefix, showWhitespace);
         }
@@ -321,7 +320,7 @@ public class Node<ASTNode extends AbstractJavaNode> {
      * package, and three is private.
      */
     public int getLevel() {
-        List<Token> tokens = getLeadingTokens();
+        Array<Token> tokens = getLeadingTokens();
         for (Token t : tokens) {
             switch (t.kind) {
                 case JavaParserConstants.PUBLIC:

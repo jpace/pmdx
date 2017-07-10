@@ -24,7 +24,6 @@ public class Ctor extends Function {
     public double getMatchScore(Ctor other) {
         ASTFormalParameters afp = getParameters();
         ASTFormalParameters bfp = other.getParameters();
-        
         return ParameterUtil.getMatchScore(afp, bfp);
     }
 

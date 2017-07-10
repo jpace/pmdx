@@ -12,11 +12,6 @@ import org.incava.ijdk.collect.StringList;
  * Miscellaneous routines for fields.
  */
 public class Field extends Node<ASTFieldDeclaration> {
-    public static Token getName(ASTVariableDeclarator vd) {
-        ASTVariableDeclaratorId vid = Node.of(vd).findChild(ASTVariableDeclaratorId.class);
-        return Node.of(vid).getFirstToken();
-    }
-
     public Field(ASTFieldDeclaration fld) {
         super(fld);
     }
@@ -38,7 +33,7 @@ public class Field extends Node<ASTFieldDeclaration> {
     public StringList getNameList() {
         StringList names = StringList.empty();
         for (ASTVariableDeclarator avd : getVariableDeclarators()) {
-            names.add(VariableUtil.getName(avd).image);
+            names.add(new Variable(avd).getName().image);
         }
         return names;
     }

@@ -5,6 +5,7 @@ import junitparams.Parameters;
 import junitparams.naming.TestCaseName;
 import net.sourceforge.pmd.lang.java.ast.ASTTypeDeclaration;
 import org.incava.attest.Parameterized;
+import org.incava.ijdk.collect.Array;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -47,5 +48,43 @@ public class ClassNodeTest extends Parameterized {
             params(1.0, "class C {}", "class C {}"),
             params(0.0, "class C {}", "class D {}")
                           );
-    }    
+    }
+
+    @Test @Parameters @TestCaseName("{method} {index} {params}")
+    public void getField(boolean expected, String str, int idx) {
+        ClassNode cn = getFirst(str);
+        Field result = cn.getField(idx);
+        assertThat(result != null, withContext(message("result", result, "str", str, "idx", idx), equalTo(expected)));
+    }
+    
+    private List<Object[]> parametersForGetField() {
+        return paramsList(
+            params(true,  "class C { int i; }", 0),
+            params(false, "class C { }", 0),
+            params(false, "class C { int i; }", 1),
+            
+            params(true,  "class C { int i; char j; }", 0),
+            params(true,  "class C { int i; char j; }", 1),
+            params(true,  "class C { int i; a() { } char j; }", 1),
+            params(false, "class C { a() { } }", 0),
+            params(false, "class C { int i; char j; }", 2)
+                          );
+    }
+
+    @Test @Parameters @TestCaseName("{method} {index} {params}")
+    public void getFields(int expected, String str) {
+        ClassNode cn = getFirst(str);
+        Array<Field> result = cn.getFields();
+        assertThat(result, withContext(message("result", result, "str", str), hasSize(expected)));
+    }
+    
+    private List<Object[]> parametersForGetFields() {
+        return paramsList(
+            params(1, "class C { int i; }"),
+            params(0, "class C { }"),
+            params(2, "class C { int i; char j; }"),
+            params(2,  "class C { int i; a() { } char j; }"),
+            params(0, "class C { a() { } }")
+                          );
+    }
 }
