@@ -3,10 +3,8 @@ package org.incava.pmdx;
 import java.util.List;
 import junitparams.Parameters;
 import junitparams.naming.TestCaseName;
-import net.sourceforge.pmd.lang.java.ast.ASTNameList;
 import net.sourceforge.pmd.lang.java.ast.Token;
 import org.incava.attest.Parameterized;
-import org.incava.ijdk.collect.StringList;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

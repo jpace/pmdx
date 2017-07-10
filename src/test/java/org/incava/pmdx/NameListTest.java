@@ -3,12 +3,8 @@ package org.incava.pmdx;
 import java.util.List;
 import junitparams.Parameters;
 import junitparams.naming.TestCaseName;
-import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceBody;
-import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceBodyDeclaration;
-import net.sourceforge.pmd.lang.java.ast.ASTConstructorDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTName;
 import net.sourceforge.pmd.lang.java.ast.ASTNameList;
-import net.sourceforge.pmd.lang.java.ast.ASTTypeDeclaration;
 import net.sourceforge.pmd.lang.java.ast.Token;
 import org.incava.attest.Parameterized;
 import org.incava.ijdk.collect.StringList;
@@ -21,15 +17,8 @@ import static org.incava.attest.ContextMatcher.withContext;
 
 public class NameListTest extends Parameterized {
     public NameList getFirst(String str) {
-        ClassNode cls = new ClassNodeTest().getFirst(str);
-        
-        ASTClassOrInterfaceBody body = cls.findChild(ASTClassOrInterfaceBody.class);
-        ASTClassOrInterfaceBodyDeclaration decl = Node.of(body).findChild(ASTClassOrInterfaceBodyDeclaration.class);
-        ASTConstructorDeclaration cdecl = Node.of(decl).findChild(ASTConstructorDeclaration.class);
-
-        Ctor ctor = new Ctor(cdecl);
-        ASTNameList names = ctor.getThrowsList();
-        
+        Ctor ctor = new CtorTest().getFirst(str);
+        ASTNameList names = ctor.getThrowsList();        
         return new NameList(names);
     }
 

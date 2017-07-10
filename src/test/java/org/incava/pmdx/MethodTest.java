@@ -71,6 +71,7 @@ public class MethodTest extends Parameterized {
     private List<Object[]> parametersForGetFullName() {
         return paramsList(
             params("a()",          "void a()"),
+            params("b()",          "void b()"),
             params("a(int)",       "void a(int x)"),
             params("a(char)",      "void a(char y)"),
             params("a(int, char)", "void a(int x, char y)"),

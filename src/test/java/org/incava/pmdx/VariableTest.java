@@ -16,7 +16,8 @@ import static org.incava.attest.ContextMatcher.withContext;
 public class VariableTest extends Parameterized {
     @Test @Parameters @TestCaseName("{method} {index} {params}")
     public void getName(StringList expected, String str) {
-        Field field = new FieldTest().getFirst(str);        
+        String clsStr = "public class C { " + str + " }";
+        Field field = new FieldTest().getFirst(clsStr);
         List<ASTVariableDeclarator> vars = field.getVariableDeclarators();
         for (int idx = 0; idx < expected.size(); ++idx) {
             Variable var = new Variable(vars.get(idx));
@@ -28,8 +29,8 @@ public class VariableTest extends Parameterized {
     
     private List<Object[]> parametersForGetName() {
         return paramsList(
-            params(StringList.of("x"),       "public class C { int x; }"),
-            params(StringList.of("x", "y"),  "public class C { char x, y; }")
+            params(StringList.of("x"),       "int x;"),
+            params(StringList.of("x", "y"),  "char x, y;")
                           );
     }
 }

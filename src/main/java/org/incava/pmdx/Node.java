@@ -77,7 +77,7 @@ public class Node<ASTNode extends AbstractJavaNode> {
         int nChildren = node.jjtGetNumChildren();
         for (int ord = 0; ord < nChildren; ++ord) {
             AbstractJavaNode n = (AbstractJavaNode)node.jjtGetChild(ord);
-            Node<AbstractJavaNode> nn = new Node<AbstractJavaNode>(n);
+            Node<AbstractJavaNode> nn = Node.of(n);
             while (true) {
                 t = t.next;
                 if (t == nn.getFirstToken()) {

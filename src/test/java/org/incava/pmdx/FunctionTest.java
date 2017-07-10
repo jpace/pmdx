@@ -5,11 +5,8 @@ import junitparams.Parameters;
 import junitparams.naming.TestCaseName;
 import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceBody;
 import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceBodyDeclaration;
-import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceDeclaration;
-import net.sourceforge.pmd.lang.java.ast.ASTCompilationUnit;
 import net.sourceforge.pmd.lang.java.ast.ASTConstructorDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTNameList;
-import net.sourceforge.pmd.lang.java.ast.ASTTypeDeclaration;
 import net.sourceforge.pmd.lang.java.ast.Token;
 import org.incava.attest.Parameterized;
 import org.incava.ijdk.collect.StringList;
@@ -33,29 +30,31 @@ public class FunctionTest extends Parameterized {
     
     @Test @Parameters @TestCaseName("{method} {index} {params}")
     public void getThrows(boolean expected, String str) {
-        Function cn = getFirst(str);
-        Token tk = cn.getThrows();
+        String clsStr = "public class C { public C() " + str + " { } }";
+        Function f = getFirst(clsStr);
+        Token tk = f.getThrows();
         assertThat(tk != null, withContext(message("str", str, "tk", tk), equalTo(expected)));
     }
     
     private List<Object[]> parametersForGetThrows() {
         return paramsList(
-            params(false, "public class C { public C() { } }"),
-            params(true,  "public class C { public C() throws Ex { } }")
+            params(false, ""),
+            params(true,  "throws Ex")
                           );
     }
 
     @Test @Parameters @TestCaseName("{method} {index} {params}")
     public void getThrowsList(boolean expected, String str) {
-        Function cn = getFirst(str);
-        ASTNameList names = cn.getThrowsList();
+        String clsStr = "public class C { public C() " + str + " { } }";
+        Function f = getFirst(clsStr);
+        ASTNameList names = f.getThrowsList();
         assertThat(names != null, withContext(message("str", str), equalTo(expected)));
     }
     
     private List<Object[]> parametersForGetThrowsList() {
         return paramsList(
-            params(false,  "public class C { public C() { } }"),
-            params(true,   "public class C { public C() throws Ex { } }")
+            params(false,  ""),
+            params(true,   "throws Ex")
                           );
     }
 }

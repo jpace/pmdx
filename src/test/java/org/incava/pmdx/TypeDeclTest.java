@@ -13,11 +13,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.incava.attest.Assertions.message;
 import static org.incava.attest.ContextMatcher.withContext;
-import static org.incava.pmdx.CompilationUnitTest.compile;
 
 public class TypeDeclTest extends Parameterized {
     public TypeDecl getFirst(String str) {
-        ASTCompilationUnit acu = compile(str);
+        ASTCompilationUnit acu = CompilationUnitTest.compile(str);
         CompilationUnit cu = new CompilationUnit(acu);
         List<ASTTypeDeclaration> decls = cu.getTypeDeclarations();
         return new TypeDecl(decls.get(0));

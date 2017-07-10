@@ -24,7 +24,6 @@ public class Function extends Node<AbstractJavaNode> {
     public Token getThrows() {
         Token tk = getFirstToken();
         while (true) {
-            tr.Ace.cyan("tk", tk);
             if (tk.kind == JavaParserConstants.THROWS) {
                 return tk;
             }

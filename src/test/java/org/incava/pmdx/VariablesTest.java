@@ -5,7 +5,6 @@ import junitparams.Parameters;
 import junitparams.naming.TestCaseName;
 import net.sourceforge.pmd.lang.java.ast.ASTVariableDeclarator;
 import org.incava.attest.Parameterized;
-import org.incava.ijdk.collect.Array;
 import org.incava.ijdk.collect.StringList;
 import org.junit.Test;
 
@@ -17,7 +16,8 @@ import static org.incava.attest.ContextMatcher.withContext;
 public class VariablesTest extends Parameterized {
     @Test @Parameters @TestCaseName("{method} {index} {params}")
     public void getNames(StringList expected, String str) {
-        Field field = new FieldTest().getFirst(str);
+        String clsStr = "public class C { " + str + " }";
+        Field field = new FieldTest().getFirst(clsStr);
         List<ASTVariableDeclarator> vds = field.getVariableDeclarators();
         Variables vars = new Variables(vds);
         
@@ -31,8 +31,8 @@ public class VariablesTest extends Parameterized {
     
     private List<Object[]> parametersForGetNames() {
         return paramsList(
-            params(StringList.of("x"),       "public class C { int x; }"),
-            params(StringList.of("x", "y"),  "public class C { char x, y; }")
+            params(StringList.of("x"),      "int x;"),
+            params(StringList.of("x", "y"), "char x, y;")
                           );
     }
 }

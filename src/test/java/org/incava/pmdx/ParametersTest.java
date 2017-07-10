@@ -21,31 +21,33 @@ public class ParametersTest extends Parameterized {
     
     @Test @junitparams.Parameters @TestCaseName("{method} {index} {params}")
     public void getName(int expected, String str) {
-        Parameters ps = getFirst(str);
+        String clsStr = "class C { " + str + " { } }";
+        Parameters ps = getFirst(clsStr);
         List<ASTFormalParameter> params = ps.getParameters();
         assertThat(params, hasSize(expected));
     }
     
     private List<Object[]> parametersForGetName() {
         return paramsList(
-            params(0, "class C { C() { } }"),
-            params(1, "class C { C(int x) { } }"),
-            params(2, "class C { C(int x, char y) { } }")
+            params(0, "C()"),
+            params(1, "C(int x)"),
+            params(2, "C(int x, char y)")
                           );
     }
     
     @Test @junitparams.Parameters @TestCaseName("{method} {index} {params}")
     public void getTypes(StringList expected, String str) {
-        Parameters ps = getFirst(str);
+        String clsStr = "class C { " + str + " { } }";
+        Parameters ps = getFirst(clsStr);
         List<String> params = ps.getTypes();
         assertThat(params, withContext(message("str", str), equalTo(expected)));
     }
     
     private List<Object[]> parametersForGetTypes() {
         return paramsList(
-            params(StringList.empty(), "class C { C() { } }"),
-            params(StringList.of("int"), "class C { C(int x) { } }"),
-            params(StringList.of("int", "char"), "class C { C(int x, char y) { } }")
+            params(StringList.empty(), "C()"),
+            params(StringList.of("int"), "C(int x)"),
+            params(StringList.of("int", "char"), "C(int x, char y)")
                           );
     }
 }

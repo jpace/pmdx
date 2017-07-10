@@ -18,14 +18,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.incava.attest.Assertions.message;
 import static org.incava.attest.ContextMatcher.withContext;
-import static org.incava.pmdx.CompilationUnitTest.compile;
 
 public class NodeTest extends Parameterized {
     private static Node<ASTCompilationUnit> node;
 
     @BeforeClass
     public static void setup() {
-        node = Node.of(compile("package abc;\nclass C1 {}"));
+        node = Node.of(CompilationUnitTest.compile("package abc;\nclass C1 {}"));
     }
     
     @Test
@@ -150,7 +149,7 @@ public class NodeTest extends Parameterized {
 
     @Test
     public void findChildren() throws Exception {
-        ASTCompilationUnit cu = compile("package abc;\nclass C {}\nclass D {}");
+        ASTCompilationUnit cu = CompilationUnitTest.compile("package abc;\nclass C {}\nclass D {}");
         assertFindChildren(1, cu, ASTPackageDeclaration.class);
         assertFindChildren(2, cu, ASTTypeDeclaration.class);
         assertFindChildren(0, cu, ASTImportDeclaration.class);
@@ -158,7 +157,7 @@ public class NodeTest extends Parameterized {
 
     @Test
     public void findToken() throws Exception {
-        ASTCompilationUnit cu = compile("package abc;\npublic class C {}");
+        ASTCompilationUnit cu = CompilationUnitTest.compile("package abc;\npublic class C {}");
         AbstractJavaNode type = Node.of(cu).findChild(ASTTypeDeclaration.class);
 
         Token pb = SimpleNodeUtil.findToken(type, JavaParserConstants.PUBLIC);
@@ -170,7 +169,7 @@ public class NodeTest extends Parameterized {
 
     @Test
     public void getLeadingToken() throws Exception {
-        ASTCompilationUnit cu = compile("package abc;\npublic abstract class C {}");
+        ASTCompilationUnit cu = CompilationUnitTest.compile("package abc;\npublic abstract class C {}");
         AbstractJavaNode type = Node.of(cu).findChild(ASTTypeDeclaration.class);
         Node<AbstractJavaNode> n = Node.of(type);
 
@@ -186,7 +185,7 @@ public class NodeTest extends Parameterized {
 
     @Test @Parameters @TestCaseName("{method} {index} {params}")
     public void getAccess(int expected, String str) {
-        ASTCompilationUnit cu = compile(str);
+        ASTCompilationUnit cu = CompilationUnitTest.compile(str);
         AbstractJavaNode type = Node.of(cu).findChild(ASTTypeDeclaration.class);
         Node<AbstractJavaNode> n = Node.of(type);
         
