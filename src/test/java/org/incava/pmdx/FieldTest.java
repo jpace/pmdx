@@ -6,10 +6,8 @@ import junitparams.naming.TestCaseName;
 import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceBody;
 import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceBodyDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceDeclaration;
-import net.sourceforge.pmd.lang.java.ast.ASTCompilationUnit;
 import net.sourceforge.pmd.lang.java.ast.ASTFieldDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTType;
-import net.sourceforge.pmd.lang.java.ast.ASTTypeDeclaration;
 import net.sourceforge.pmd.lang.java.ast.Token;
 import org.incava.attest.Parameterized;
 import org.incava.ijdk.collect.StringList;
@@ -23,14 +21,9 @@ import static org.incava.pmdx.CompilationUnitTest.compile;
 
 public class FieldTest extends Parameterized {
     public Field getFirst(String str) {
-        ASTCompilationUnit acu = compile(str);
-        CompilationUnit cu = new CompilationUnit(acu);
-        List<ASTTypeDeclaration> decls = cu.getTypeDeclarations();
-        
-        Node<ASTTypeDeclaration> typeDecl = Node.of(decls.get(0));
-        ASTClassOrInterfaceDeclaration coid = typeDecl.findChild(ASTClassOrInterfaceDeclaration.class);
-        ASTClassOrInterfaceBody body = Node.of(coid).findChild(ASTClassOrInterfaceBody.class);
-        ASTClassOrInterfaceBodyDeclaration decl = Node.of(body).findChild(ASTClassOrInterfaceBodyDeclaration.class);
+        ClassNode cls = new ClassNodeTest().getFirst(str);
+        ASTClassOrInterfaceBody body = cls.findChild(ASTClassOrInterfaceBody.class);
+        ASTClassOrInterfaceBodyDeclaration decl = Node.of(body).findChild(ASTClassOrInterfaceBodyDeclaration.class);        
         ASTFieldDeclaration field = Node.of(decl).findChild(ASTFieldDeclaration.class);
         
         return new Field(field);

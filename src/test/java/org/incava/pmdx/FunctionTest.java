@@ -23,13 +23,9 @@ import static org.incava.pmdx.CompilationUnitTest.compile;
 
 public class FunctionTest extends Parameterized {
     public Function getFirst(String str) {
-        ASTCompilationUnit acu = compile(str);
-        CompilationUnit cu = new CompilationUnit(acu);
-        List<ASTTypeDeclaration> decls = cu.getTypeDeclarations();
+        ClassNode cls = new ClassNodeTest().getFirst(str);
         
-        Node<ASTTypeDeclaration> typeDecl = Node.of(decls.get(0));
-        ASTClassOrInterfaceDeclaration coid = typeDecl.findChild(ASTClassOrInterfaceDeclaration.class);
-        ASTClassOrInterfaceBody body = Node.of(coid).findChild(ASTClassOrInterfaceBody.class);
+        ASTClassOrInterfaceBody body = cls.findChild(ASTClassOrInterfaceBody.class);
         ASTClassOrInterfaceBodyDeclaration decl = Node.of(body).findChild(ASTClassOrInterfaceBodyDeclaration.class);
         ASTConstructorDeclaration ctor = Node.of(decl).findChild(ASTConstructorDeclaration.class);
         

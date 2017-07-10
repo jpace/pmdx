@@ -5,8 +5,6 @@ import junitparams.Parameters;
 import junitparams.naming.TestCaseName;
 import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceBody;
 import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceBodyDeclaration;
-import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceDeclaration;
-import net.sourceforge.pmd.lang.java.ast.ASTCompilationUnit;
 import net.sourceforge.pmd.lang.java.ast.ASTConstructorDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTName;
 import net.sourceforge.pmd.lang.java.ast.ASTNameList;
@@ -24,13 +22,9 @@ import static org.incava.pmdx.CompilationUnitTest.compile;
 
 public class NameListTest extends Parameterized {
     public NameList getFirst(String str) {
-        ASTCompilationUnit acu = compile(str);
-        CompilationUnit cu = new CompilationUnit(acu);
-        List<ASTTypeDeclaration> decls = cu.getTypeDeclarations();
+        ClassNode cls = new ClassNodeTest().getFirst(str);
         
-        Node<ASTTypeDeclaration> typeDecl = Node.of(decls.get(0));
-        ASTClassOrInterfaceDeclaration coid = typeDecl.findChild(ASTClassOrInterfaceDeclaration.class);
-        ASTClassOrInterfaceBody body = Node.of(coid).findChild(ASTClassOrInterfaceBody.class);
+        ASTClassOrInterfaceBody body = cls.findChild(ASTClassOrInterfaceBody.class);
         ASTClassOrInterfaceBodyDeclaration decl = Node.of(body).findChild(ASTClassOrInterfaceBodyDeclaration.class);
         ASTConstructorDeclaration cdecl = Node.of(decl).findChild(ASTConstructorDeclaration.class);
 
