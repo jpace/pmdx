@@ -203,7 +203,9 @@ public class ParameterUtil extends SimpleNodeUtil {
 
         int numParams = Math.max(fromSize, toSize);
         double match = (double)exactMatches / numParams;
+        tr.Ace.log("match", match);
         match += (double)misorderedMatches / (2 * numParams);
+        tr.Ace.log("match", match);
 
         return 0.5 + (match / 2.0);
     }
@@ -212,10 +214,10 @@ public class ParameterUtil extends SimpleNodeUtil {
      * Returns 0 for exact match, +1 for misordered match, -1 for no match.
      */
     protected static int getListMatch(List<String> fromList, int fromIndex, List<String> toList) {
-        int fromSize = fromList.size();
-        int toSize = toList.size();
-        String fromStr = fromIndex < fromSize ? fromList.get(fromIndex) : null;
-        String toStr = fromIndex < toSize ? toList.get(fromIndex) : null;
+        int    fromSize = fromList.size();
+        int    toSize   = toList.size();
+        String fromStr  = fromIndex < fromSize ? fromList.get(fromIndex) : null;
+        String toStr    = fromIndex < toSize   ? toList.get(fromIndex)   : null;
         
         if (fromStr == null) {
             return -1;

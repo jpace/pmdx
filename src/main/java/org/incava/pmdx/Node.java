@@ -369,7 +369,7 @@ public class Node<ASTNode extends AbstractJavaNode> {
         return childType == null || child.getClass().equals(childType) ? (NodeType)child : null;
     }
 
-    protected ASTNode astNode() {
+    public ASTNode astNode() {
         return node;
     }
 }

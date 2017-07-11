@@ -33,7 +33,7 @@ public class ClassNode extends Node<ASTClassOrInterfaceDeclaration> {
     }
 
     public Match match(ClassNode other) {
-        return new Match(getName().equals(other.getName()) ? 1.0 : 0.0);
+        return new Match(getName().equals(other.getName()) ? 100 : 0);
     }
 
     public Field getField(int idx) {

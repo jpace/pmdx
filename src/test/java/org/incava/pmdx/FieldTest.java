@@ -51,7 +51,7 @@ public class FieldTest extends Parameterized {
     }
 
     @Test @Parameters @TestCaseName("{method} {index} {params}")
-    public void getMatch(double expected, String xStr, String yStr) {
+    public void getMatch(int expected, String xStr, String yStr) {
         Field x = getFirst("class C { " + xStr + "; }");
         Field y = getFirst("class C { " + yStr + "; }");
 
@@ -62,14 +62,14 @@ public class FieldTest extends Parameterized {
     
     private List<Object[]> parametersForGetMatch() {
         return paramsList(
-            params(1.0,           "int f",    "int f"),
-            params(0.75,          "int f",    "int f, g"),
-            params(0.75,          "int f, g", "int f"),
-            params(2 / 3.0,       "int f",    "int f, g, h"),
-            params(0.5 + 1 / 3.0, "int f, g", "int f, g, h"),
-            params(0.5,           "int f",    "char f"),
-            params(0.25,          "int f",    "char f, g"),
-            params(0,             "int f",    "char g")
+            params(100, "int f",    "int f"),
+            params(75,  "int f",    "int f, g"),
+            params(75,  "int f, g", "int f"),
+            params(66,  "int f",    "int f, g, h"),
+            params(83,  "int f, g", "int f, g, h"),
+            params(50,  "int f",    "char f"),
+            params(25,  "int f",    "char f, g"),
+            params(0,   "int f",    "char g")
                           );
     }
     

@@ -57,12 +57,12 @@ public class Field extends Node<ASTFieldDeclaration> {
 
         List<String> inBoth = aNames.intersection(bNames);
         
-        int     matched = inBoth.size();
-        int     count   = Math.max(aNames.size(), bNames.size());
-        double  score   = 0.5 * matched / count;
+        int matched = inBoth.size();
+        int count   = Math.max(aNames.size(), bNames.size());
+        int score   = 50 * matched / count;
 
         if (getType().toString().equals(other.getType().toString())) {
-            score += 0.5;
+            score += 50;
         }
         
         return new Match(score);

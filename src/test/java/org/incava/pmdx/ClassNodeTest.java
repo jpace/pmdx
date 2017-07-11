@@ -33,7 +33,7 @@ public class ClassNodeTest extends Parameterized {
     }
 
     @Test @Parameters @TestCaseName("{method} {index} {params}")
-    public void getMatch(double expected, String xStr, String yStr) {
+    public void getMatch(int expected, String xStr, String yStr) {
         ClassNode x = getFirst(xStr);
         ClassNode y = getFirst(yStr);
 
@@ -44,8 +44,8 @@ public class ClassNodeTest extends Parameterized {
     
     private List<Object[]> parametersForGetMatch() {
         return paramsList(
-            params(1.0, "class C {}", "class C {}"),
-            params(0.0, "class C {}", "class D {}")
+            params(100, "class C {}", "class C {}"),
+            params(0,   "class C {}", "class D {}")
                           );
     }
 

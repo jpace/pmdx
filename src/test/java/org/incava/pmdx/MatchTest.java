@@ -13,15 +13,15 @@ import static org.incava.attest.ContextMatcher.withContext;
 
 public class MatchTest extends Parameterized {
     @Test @Parameters @TestCaseName("{method} {index} {params}")
-    public void init(double expected, double score) {
+    public void init(int expected, int score) {
         Match match = new Match(score);
-        double result = match.score();
+        int result = match.score();
         assertThat(result, withContext(message("score", score), equalTo(expected)));
     }
     
     private List<Object[]> parametersForInit() {
         return paramsList(
-            params(1.2, 1.2),
-            params(2.3, 2.3));
+            params(12, 12),
+            params(23, 23));
     }
 }
