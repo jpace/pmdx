@@ -12,8 +12,10 @@ public class MethodMatcher {
         String xn = x.getName().image;
         String yn = y.getName().image;
 
-        if (xn.equals(yn)) {            
-            match = new Match(100);
+        if (xn.equals(yn)) {
+            Parameters xp = new Parameters(x.getParameters());
+            Parameters yp = new Parameters(y.getParameters());
+            match = new ParametersMatcher(xp, yp).getMatch();
         }
         else {
             match = new Match(0);

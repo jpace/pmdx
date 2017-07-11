@@ -10,23 +10,21 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.incava.attest.Assertions.message;
 import static org.incava.attest.ContextMatcher.withContext;
 
-public class MethodMatcherTest extends Parameterized {
+public class CtorMatcherTest extends Parameterized {
     @Test @junitparams.Parameters @TestCaseName("{method} {index} {params}")
     public void test(int expected, String xs, String ys) {
-        Method        x  = new MethodTest().getFirst("public class C { " + xs + " { } }");
-        Method        y  = new MethodTest().getFirst("public class C { " + ys + " { } }");
-        MethodMatcher mm = new MethodMatcher(x, y);
-        Match         m  = mm.getMatch();        
+        Ctor x = new CtorTest().getFirst("public class C { " + xs + " { } }");
+        Ctor y = new CtorTest().getFirst("public class C { " + ys + " { } }");
+        CtorMatcher matcher = new CtorMatcher(x, y);
+        Match m = matcher.getMatch();        
         assertThat(m.score(), withContext(message("xs", xs, "ys", ys), equalTo(expected)));
     }
     
     private List<Object[]> parametersForTest() {
         return paramsList(
-            params(100, "void a()", "void a()"),
-            params(0,   "void a()", "void b()"),
-            // the return type doesn't matter:
-            params(100, "void a()", "int a()"),
-            params(50,  "void a()", "void a(int i)")
+            params(100, "C()", "C()"),
+            params(50,  "C()", "C(int x)"),
+            params(50,  "C(int x)", "C()")
                           );
     }    
 }
