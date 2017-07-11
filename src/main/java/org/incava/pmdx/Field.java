@@ -44,27 +44,4 @@ public class Field extends Node<ASTFieldDeclaration> {
     public Node<ASTType> getType() {
         return Node.of(findChild(ASTType.class));
     }
-
-    public double getMatchScore(ASTFieldDeclaration other) {
-        return match(new Field(other)).score();
-    }
-
-    public Match match(Field other) {
-        // a field can have more than one name.
-
-        StringList aNames = getNameList();
-        StringList bNames = other.getNameList();
-
-        List<String> inBoth = aNames.intersection(bNames);
-        
-        int matched = inBoth.size();
-        int count   = Math.max(aNames.size(), bNames.size());
-        int score   = 50 * matched / count;
-
-        if (getType().toString().equals(other.getType().toString())) {
-            score += 50;
-        }
-        
-        return new Match(score);
-    }
 }

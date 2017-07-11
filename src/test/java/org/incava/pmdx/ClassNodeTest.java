@@ -33,23 +33,6 @@ public class ClassNodeTest extends Parameterized {
     }
 
     @Test @Parameters @TestCaseName("{method} {index} {params}")
-    public void getMatch(int expected, String xStr, String yStr) {
-        ClassNode x = getFirst(xStr);
-        ClassNode y = getFirst(yStr);
-
-        Match match = x.match(y);
-
-        assertThat(match.score(), withContext(message("xStr", xStr, "yStr", yStr), equalTo(expected)));
-    }
-    
-    private List<Object[]> parametersForGetMatch() {
-        return paramsList(
-            params(100, "class C {}", "class C {}"),
-            params(0,   "class C {}", "class D {}")
-                          );
-    }
-
-    @Test @Parameters @TestCaseName("{method} {index} {params}")
     public void getField(boolean expected, String str, int idx) {
         ClassNode cn = getFirst(str);
         Field result = cn.getField(idx);
